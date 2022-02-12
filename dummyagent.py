@@ -1,4 +1,3 @@
-import imp
 from spade import agent, quit_spade
 import carla
 
