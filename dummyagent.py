@@ -10,6 +10,7 @@ class DummyAgent(agent.Agent):
 #Conexion con CARLA
 client = carla.Client('127.0.0.1', 2000)
 client.set_timeout(10.0)
+
 world = client.get_world()
 
 #Lanzamos el agente
