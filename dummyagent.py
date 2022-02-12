@@ -1,5 +1,6 @@
 from spade import agent, quit_spade
 import carla
+import pygame
 
 #Clase Agente
 class DummyAgent(agent.Agent):
