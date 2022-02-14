@@ -7,7 +7,7 @@ class DummyAgent(agent.Agent):
         #Conexion con CARLA
         client = carla.Client('127.0.0.1', 2000)
         client.set_timeout(10.0)
-
+        #Referencia al mundo
         world = client.get_world()
 
         spawn_points = world.get_map().get_spawn_points()
