@@ -37,7 +37,6 @@ class DummyAgent(agent.Agent):
         #Guardamos informacion del sensor
         image_depth = image_queue_depth.get()
         image_depth.save_to_disk("test_images/%06d_depth.png" %(image_depth.frame), carla.ColorConverter.LogarithmicDepth)
-        print(image_depth.raw_data)
         #client.apply_batch([carla.command.DestroyActor(x) for x in actor_list])
         
 
