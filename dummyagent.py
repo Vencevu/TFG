@@ -42,8 +42,9 @@ class DummyAgent(agent.Agent):
 #Lanzamos el agente
 dummy = DummyAgent("agente@localhost", "1234")
 future = dummy.start()
-#Esperamos a que termine el setup
-future.result()
 
-dummy.stop()
-quit_spade()
+try:
+    time.sleep(1)
+except KeyboardInterrupt:
+    dummy.stop()
+    quit_spade()
