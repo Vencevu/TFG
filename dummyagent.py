@@ -44,7 +44,9 @@ dummy = DummyAgent("agente@localhost", "1234")
 future = dummy.start()
 
 try:
-    time.sleep(1)
+    while True:
+        time.sleep(1)
 except KeyboardInterrupt:
     dummy.stop()
-    quit_spade()
+
+quit_spade()
