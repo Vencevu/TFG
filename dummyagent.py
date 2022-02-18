@@ -23,7 +23,6 @@ class DummyAgent(agent.Agent):
         bp = random.choice(blueprint_library.filter('vehicle'))
         transform = random.choice(world.get_map().get_spawn_points()) 
         vehicle = world.spawn_actor(bp, transform) 
-        vehicle.set_autopilot(True)
         actor_list.append(vehicle)
 
         #Creamos sensor y lo acoplamos al vehiculo
