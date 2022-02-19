@@ -8,9 +8,11 @@ import time
 
 #Clase Agente
 class DummyAgent(agent.Agent):
+    
     actor_list = []
     world = None
     client = None
+
     async def setup(self):
         #Conexion con CARLA
         self.client = carla.Client('127.0.0.1', 2000)
