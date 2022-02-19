@@ -8,45 +8,54 @@ import time
 
 #Clase Agente
 class DummyAgent(agent.Agent):
+    actor_list = []
+    world = None
+    client = None
     async def setup(self):
-
         #Conexion con CARLA
-        client = carla.Client('127.0.0.1', 2000)
-        client.set_timeout(10.0)
+        self.client = carla.Client('127.0.0.1', 2000)
+        self.client.set_timeout(10.0)
 
         #Configuracion del mundo
-        world = client.get_world()
+        self.world = self.client.get_world()
 
         #Creamos vehiculo
-        actor_list = []
-        blueprint_library = world.get_blueprint_library()
+        
+        blueprint_library = self.world.get_blueprint_library()
         bp = random.choice(blueprint_library.filter('vehicle'))
-        transform = random.choice(world.get_map().get_spawn_points()) 
-        vehicle = world.spawn_actor(bp, transform) 
-        actor_list.append(vehicle)
+        transform = random.choice(self.world.get_map().get_spawn_points()) 
+        vehicle = self.world.spawn_actor(bp, transform) 
+        self.actor_list.append(vehicle)
 
         #Creamos sensor y lo acoplamos al vehiculo
         camera_depth = blueprint_library.find('sensor.camera.depth')
         camera_transform = carla.Transform(carla.Location(x=0.8, z=1.7))
-        camera_d = world.spawn_actor(camera_depth, camera_transform, attach_to=vehicle)
+        camera_d = self.world.spawn_actor(camera_depth, camera_transform, attach_to=vehicle)
         image_queue_depth = queue.Queue()
         camera_d.listen(image_queue_depth.put)
-        actor_list.append(camera_d)
+        self.actor_list.append(camera_d)
 
         #Guardamos informacion del sensor
         image_depth = image_queue_depth.get()
         image_depth.save_to_disk("test_images/%06d_depth.png" %(image_depth.frame), carla.ColorConverter.LogarithmicDepth)
-        #client.apply_batch([carla.command.DestroyActor(x) for x in actor_list])
+        self.client.apply_batch([carla.command.DestroyActor(x) for x in self.actor_list])
         
 
 #Lanzamos el agente
 dummy = DummyAgent("agente@localhost", "1234")
-future = dummy.start()
+dummy2 = DummyAgent("agente2@localhost", "1235")
+dummy3 = DummyAgent("agente3@localhost", "1236")
+
+dummy.start()
+dummy2.start()
+dummy3.start()
 
 try:
     while True:
         time.sleep(1)
 except KeyboardInterrupt:
     dummy.stop()
+    dummy2.stop()
+    dummy3.stop()
 
 quit_spade()
