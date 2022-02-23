@@ -45,19 +45,15 @@ class DummyAgent(agent.Agent):
 
 #Lanzamos el agente
 dummy = DummyAgent("agente@localhost", "1234")
-dummy2 = DummyAgent("agente2@localhost", "1235")
-dummy3 = DummyAgent("agente3@localhost", "1236")
 
 dummy.start()
-dummy2.start()
-dummy3.start()
+
 
 try:
     while True:
         time.sleep(1)
 except KeyboardInterrupt:
     dummy.stop()
-    dummy2.stop()
-    dummy3.stop()
+
 
 quit_spade()
