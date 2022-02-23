@@ -23,16 +23,16 @@ class DummyAgent(agent.Agent):
         blueprint_library = self.world.get_blueprint_library()
         bp = random.choice(blueprint_library.filter('vehicle'))
         transform = random.choice(self.world.get_map().get_spawn_points()) 
-        vehicle = self.world.spawn_actor(bp, transform) 
+        vehicle = self.world.try_spawn_actor(bp, transform) 
         self.actor_list.append(vehicle)
 
         #Creamos sensor y lo acoplamos al vehiculo
         lidar_cam = None
-        lidar_bp = self.world.get_blueprint_library().find('sensor.lidar.ray_cast')
-        lidar_bp.set_attribute('channels',str(32))
-        lidar_bp.set_attribute('points_per_second',str(90000))
-        lidar_bp.set_attribute('rotation_frequency',str(40))
-        lidar_bp.set_attribute('range',str(20))
+        lidar_bp = blueprint_library.find('sensor.lidar.ray_cast')
+        lidar_bp.set_attribute('channels',"32")
+        lidar_bp.set_attribute('points_per_second',"90000")
+        lidar_bp.set_attribute('rotation_frequency',"40")
+        lidar_bp.set_attribute('range',"20")
         lidar_location = carla.Location(0,0,2)
         lidar_rotation = carla.Rotation(0,0,0)
         lidar_transform = carla.Transform(lidar_location,lidar_rotation)
@@ -48,14 +48,15 @@ class DummyAgent(agent.Agent):
 #Lanzamos el agente
 dummy = DummyAgent("agente@localhost", "1234")
 
-dummy.start()
+future = dummy.start()
+future.result()
 
 
-try:
-    while True:
-        time.sleep(1)
-except KeyboardInterrupt:
-    dummy.stop()
+# try:
+#     while True:
+#         time.sleep(1)
+# except KeyboardInterrupt:
+#     dummy.stop()
 
-
+dummy.stop()
 quit_spade()
