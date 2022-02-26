@@ -13,6 +13,7 @@ class DummyAgent(agent.Agent):
 
     def save_lidar(self, image):
         print(5)
+        image.save_to_disk('test_images/lidar/%.6d.ply' % image.frame)
 
     async def setup(self):
         #Conexion con CARLA
@@ -49,21 +50,19 @@ class DummyAgent(agent.Agent):
         self.actor_list.append(lidar_sen)
 
 
-        self.client.apply_batch([carla.command.DestroyActor(x) for x in self.actor_list])
+        #self.client.apply_batch([carla.command.DestroyActor(x) for x in self.actor_list])
         
 
 #Lanzamos el agente
 dummy = DummyAgent("agente@localhost", "1234")
 
-future = dummy.start()
-future.result()
+dummy.start()
 
 
-# try:
-#     while True:
-#         time.sleep(1)
-# except KeyboardInterrupt:
-#     dummy.stop()
+try:
+    while True:
+        time.sleep(1)
+except KeyboardInterrupt:
+    dummy.stop()
 
-dummy.stop()
 quit_spade()
