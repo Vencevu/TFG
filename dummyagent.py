@@ -31,7 +31,6 @@ class DummyAgent(agent.Agent):
         self.actor_list.append(vehicle)
 
         #Creamos sensor y lo acoplamos al vehiculo
-        lidar_cam = None
         lidar_bp = blueprint_library.find('sensor.lidar.ray_cast')
         lidar_bp.set_attribute('dropoff_general_rate', lidar_bp.get_attribute('dropoff_general_rate').recommended_values[0])
         lidar_bp.set_attribute('dropoff_intensity_limit', lidar_bp.get_attribute('dropoff_intensity_limit').recommended_values[0])
@@ -44,7 +43,6 @@ class DummyAgent(agent.Agent):
         lidar_rotation = carla.Rotation(0,0,0)
         lidar_transform = carla.Transform(lidar_location,lidar_rotation)
         lidar_sen = self.world.spawn_actor(lidar_bp,lidar_transform,attach_to=vehicle)
-        #lidar_sen.listen(lambda point_cloud: point_cloud.save_to_disk('test_images/%.6d.ply' % point_cloud.frame))
         lidar_sen.listen(self.save_lidar)
 
         self.actor_list.append(lidar_sen)
