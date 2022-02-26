@@ -3,7 +3,6 @@ import asyncio
 import carla
 import random
 import time
-import open3d as o3d
 
 #Clase Agente
 class DummyAgent(agent.Agent):
