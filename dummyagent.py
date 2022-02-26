@@ -7,7 +7,7 @@ import open3d as o3d
 
 #Clase Agente
 class DummyAgent(agent.Agent):
-
+    #Comportamiento del agente
     class MyBehav(CyclicBehaviour):
 
         actor_list = []
@@ -36,12 +36,14 @@ class DummyAgent(agent.Agent):
             lidar_bp.set_attribute('dropoff_zero_intensity', lidar_bp.get_attribute('dropoff_zero_intensity').recommended_values[0])
             lidar_bp.set_attribute('channels',"64")
             lidar_bp.set_attribute('points_per_second',"100000")
-            lidar_bp.set_attribute('rotation_frequency',"20")
+            lidar_bp.set_attribute('rotation_frequency',"40")
             lidar_bp.set_attribute('range',"50")
+
             lidar_location = carla.Location(0,0,2)
             lidar_rotation = carla.Rotation(0,0,0)
             lidar_transform = carla.Transform(lidar_location,lidar_rotation)
             lidar_sen = self.world.spawn_actor(lidar_bp,lidar_transform,attach_to=vehicle)
+
             lidar_sen.listen(self.save_lidar)
 
             self.actor_list.append(lidar_sen)
@@ -61,14 +63,9 @@ class DummyAgent(agent.Agent):
         self.add_behaviour(self.my_behav)
 
 
-        
-        
-
 #Lanzamos el agente
 dummy = DummyAgent("agente@localhost", "1234")
-
 dummy.start()
-
 
 try:
     while True:
