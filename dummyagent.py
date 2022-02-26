@@ -11,6 +11,9 @@ class DummyAgent(agent.Agent):
     world = None
     client = None
 
+    def save_lidar(self, image):
+        print(5)
+
     async def setup(self):
         #Conexion con CARLA
         self.client = carla.Client('127.0.0.1', 2000)
@@ -29,15 +32,19 @@ class DummyAgent(agent.Agent):
         #Creamos sensor y lo acoplamos al vehiculo
         lidar_cam = None
         lidar_bp = blueprint_library.find('sensor.lidar.ray_cast')
-        lidar_bp.set_attribute('channels',"32")
-        lidar_bp.set_attribute('points_per_second',"90000")
-        lidar_bp.set_attribute('rotation_frequency',"40")
-        lidar_bp.set_attribute('range',"20")
+        lidar_bp.set_attribute('dropoff_general_rate', lidar_bp.get_attribute('dropoff_general_rate').recommended_values[0])
+        lidar_bp.set_attribute('dropoff_intensity_limit', lidar_bp.get_attribute('dropoff_intensity_limit').recommended_values[0])
+        lidar_bp.set_attribute('dropoff_zero_intensity', lidar_bp.get_attribute('dropoff_zero_intensity').recommended_values[0])
+        lidar_bp.set_attribute('channels',"64")
+        lidar_bp.set_attribute('points_per_second',"100000")
+        lidar_bp.set_attribute('rotation_frequency',"20")
+        lidar_bp.set_attribute('range',"50")
         lidar_location = carla.Location(0,0,2)
         lidar_rotation = carla.Rotation(0,0,0)
         lidar_transform = carla.Transform(lidar_location,lidar_rotation)
         lidar_sen = self.world.spawn_actor(lidar_bp,lidar_transform,attach_to=vehicle)
-        lidar_sen.listen(lambda point_cloud: point_cloud.save_to_disk('test_images/%.6d.ply' % point_cloud.frame))
+        #lidar_sen.listen(lambda point_cloud: point_cloud.save_to_disk('test_images/%.6d.ply' % point_cloud.frame))
+        lidar_sen.listen(self.save_lidar)
 
         self.actor_list.append(lidar_sen)
 
