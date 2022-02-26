@@ -1,4 +1,5 @@
-from spade import agent, quit_spade, CyclicBehaviour
+from spade import agent, quit_spade
+from spade.behaviour import CyclicBehaviour
 import asyncio
 import carla
 import random
