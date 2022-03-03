@@ -47,7 +47,8 @@ class DummyAgent(agent.Agent):
                 'dt': 1.0 / 10.0
             }
 
-            control = VehiclePIDController(vehicle,args_lateral=args_lateral_dict,args_longitudinal=args_long_dict)
+            PID = VehiclePIDController(vehicle,args_lateral=args_lateral_dict,args_longitudinal=args_long_dict)
+            control = PID.run_step(10, wp)
             vehicle.apply_control(control)
 
         async def run(self):
