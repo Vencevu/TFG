@@ -4,7 +4,7 @@ import random
 import time
 from spade import agent, quit_spade
 from spade.behaviour import CyclicBehaviour
-from CARLA.PythonAPI.carla.agents.navigation.controller import VehiclePIDController
+from agents.navigation.controller import VehiclePIDController
 
 #Clase Agente
 class DummyAgent(agent.Agent):
@@ -48,7 +48,7 @@ class DummyAgent(agent.Agent):
             }
 
             PID = VehiclePIDController(vehicle,args_lateral=args_lateral_dict,args_longitudinal=args_long_dict)
-            control = PID.run_step(10, wp)
+            control = PID.run_step(5, wp)
             vehicle.apply_control(control)
 
         async def run(self):
