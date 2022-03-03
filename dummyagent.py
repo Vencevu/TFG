@@ -1,9 +1,10 @@
-from spade import agent, quit_spade
-from spade.behaviour import CyclicBehaviour
-import asyncio
 import carla
+import asyncio
 import random
 import time
+from spade import agent, quit_spade
+from spade.behaviour import CyclicBehaviour
+from CARLA.PythonAPI.carla.agents.navigation.controller import VehiclePIDController
 
 #Clase Agente
 class DummyAgent(agent.Agent):
@@ -22,16 +23,32 @@ class DummyAgent(agent.Agent):
 
             #Configuracion del mundo
             self.world = self.client.get_world()
+            map = self.world.get_map()
 
             #Creamos vehiculo
             blueprint_library = self.world.get_blueprint_library()
             bp = random.choice(blueprint_library.filter('vehicle'))
-            transform = self.world.get_map().get_spawn_points()[0]
+            transform = map.get_spawn_points()[0]
             vehicle = self.world.spawn_actor(bp, transform) 
             self.actor_list.append(vehicle)
 
-            vehicle.apply_control(carla.VehicleControl(throttle=0.5, steer=-0.2))
+            wp = map.get_waypoint(vehicle.get_location(),project_to_road=True, lane_type=(carla.LaneType.Driving | carla.LaneType.Sidewalk))
+            args_lateral_dict = {
+                'K_P': 1.95,
+                'K_D': 0.2,
+                'K_I': 0.07,
+                'dt': 1.0 / 10.0
+            }
 
+            args_long_dict = {
+                'K_P': 1,
+                'K_D': 0.0,
+                'K_I': 0.75,
+                'dt': 1.0 / 10.0
+            }
+
+            control = VehiclePIDController(vehicle,args_lateral=args_lateral_dict,args_longitudinal=args_long_dict)
+            vehicle.apply_control(control)
 
         async def run(self):
             await asyncio.sleep(1)
