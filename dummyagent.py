@@ -2,6 +2,7 @@ import carla
 import asyncio
 import random
 import time
+import math
 from spade import agent, quit_spade
 from spade.behaviour import CyclicBehaviour
 from agents.navigation.controller import VehiclePIDController
@@ -13,8 +14,12 @@ class DummyAgent(agent.Agent):
     class MyBehav(CyclicBehaviour):
 
         actor_list = []
+        next_wp = None
         world = None
+        map = None
         client = None
+        vehicle = None
+        PID = None
 
         async def on_start(self):
             #Conexion con CARLA
@@ -23,16 +28,16 @@ class DummyAgent(agent.Agent):
 
             #Configuracion del mundo
             self.world = self.client.get_world()
-            map = self.world.get_map()
+            self.map = self.world.get_map()
 
             #Creamos vehiculo
             blueprint_library = self.world.get_blueprint_library()
             bp = random.choice(blueprint_library.filter('vehicle'))
-            transform = map.get_spawn_points()[0]
-            vehicle = self.world.spawn_actor(bp, transform) 
-            self.actor_list.append(vehicle)
+            transform = self.map.get_spawn_points()[0]
+            self.vehicle = self.world.spawn_actor(bp, transform) 
+            self.actor_list.append(self.vehicle)
 
-            wp = map.get_waypoint(vehicle.get_location(),project_to_road=True, lane_type=(carla.LaneType.Driving | carla.LaneType.Sidewalk))
+            #Gestor de conduccion
             args_lateral_dict = {
                 'K_P': 1.95,
                 'K_D': 0.2,
@@ -47,11 +52,25 @@ class DummyAgent(agent.Agent):
                 'dt': 1.0 / 10.0
             }
 
-            PID = VehiclePIDController(vehicle,args_lateral=args_lateral_dict,args_longitudinal=args_long_dict)
-            control = PID.run_step(5, wp)
-            vehicle.apply_control(control)
+            self.PID = VehiclePIDController(self.vehicle,args_lateral=args_lateral_dict,args_longitudinal=args_long_dict)
+            vehicle_wp = self.map.get_waypoint(self.vehicle.get_location())
+            self.next_wp = random.choice(vehicle_wp.next(10))
+            control = self.PID.run_step(0.5, self.next_wp) 
+            self.vehicle.apply_control(control)
+
+            
 
         async def run(self):
+            vehicle_loc= self.vehicle.get_location()
+            vehicle_wp = self.map.get_waypoint(self.vehicle.get_location())
+            dist = math.sqrt((self.next_wp.transform.location.x - vehicle_loc.x)**2 + (self.next_wp.transform.location.y - vehicle_loc.y)**2 )
+            print("Distancia: ", dist)
+            if dist < 2:
+                print("Cerca del siguiente punto")
+                self.next_wp = random.choice(vehicle_wp.next(10))
+                control = self.PID.run_step(0.5, self.next_wp) 
+                self.vehicle.apply_control(control)
+
             await asyncio.sleep(1)
 
         async def on_end(self):
