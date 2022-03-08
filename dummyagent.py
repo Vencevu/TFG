@@ -63,7 +63,7 @@ class DummyAgent(agent.Agent):
         async def run(self):
             vehicle_loc= self.vehicle.get_location()
             vehicle_wp = self.map.get_waypoint(self.vehicle.get_location())
-            dist = math.sqrt((self.next_wp.transform.location.x - vehicle_loc.x)**2 + (self.next_wp.transform.location.y - vehicle_loc.y)**2 )
+            dist = self.next_wp.transform.location.distance(vehicle_loc)
             print("Distancia: ", dist)
             if dist < 2:
                 print("Cerca del siguiente punto")
