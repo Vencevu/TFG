@@ -42,31 +42,28 @@ class DummyAgent(agent.Agent):
             args_lateral_dict = {'K_P': 1.95,'K_D': 0.2,'K_I': 0.07,'dt': 1.0 / 10.0}
             args_long_dict = {'K_P': 1,'K_D': 0.0,'K_I': 0.75,'dt': 1.0 / 10.0}
 
-            self.vehicle.set_location(carla.Location(vl.x-30, vl.y, vl.z))
-            await asyncio.sleep(1)
+            
             self.PID = VehiclePIDController(self.vehicle,args_lateral=args_lateral_dict,args_longitudinal=args_long_dict)
             vl = self.vehicle.get_location()
-            vehicle_wp = self.map.get_waypoint(vl)
+            self.vehicle.set_location(carla.Location(vl.x-30, vl.y, vl.z))
+            await asyncio.sleep(1)
             
-            self.next_wp = random.choice(vehicle_wp.next(20.0))
-            print(self.next_wp.transform.location.distance(self.vehicle.get_location()))
-            
-            #self.vehicle.set_transform(self.next_wp.transform)
-            #control = self.PID.run_step(0.5, self.next_wp) 
-            #self.vehicle.apply_control(control)
-
+            vehicle_wp = self.map.get_waypoint(self.vehicle.get_location())
+            self.next_wp = random.choice(vehicle_wp.next(10.0))        
+            control = self.PID.run_step(0.5, self.next_wp) 
+            self.vehicle.apply_control(control)
             
 
         async def run(self):
-            # vehicle_loc= self.vehicle.get_location()
-            # vehicle_wp = self.map.get_waypoint(vehicle_loc)
-            # dist = self.next_wp.transform.location.distance(vehicle_loc)
-            # print("Distancia: ", dist)
-            # if dist < 2:
-            #     print("Cerca del siguiente punto")
-            #     self.next_wp = random.choice(vehicle_wp.next(10))
-            #     control = self.PID.run_step(0.5, self.next_wp) 
-            #     self.vehicle.apply_control(control)
+            vehicle_loc = self.vehicle.get_location()
+            vehicle_wp = self.map.get_waypoint(vehicle_loc)
+            dist = self.next_wp.transform.location.distance(vehicle_loc)
+            print("Distancia: ", dist)
+            if dist < 2:
+                print("Cerca del siguiente punto")
+                self.next_wp = random.choice(vehicle_wp.next(10.0))
+                control = self.PID.run_step(0.5, self.next_wp) 
+                self.vehicle.apply_control(control)
 
             await asyncio.sleep(1)
 
