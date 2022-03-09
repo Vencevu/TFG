@@ -62,7 +62,7 @@ class DummyAgent(agent.Agent):
             if dist < 2:
                 print("Cerca del siguiente punto")
                 self.next_wp = random.choice(vehicle_wp.next(10.0))
-                control = self.PID.run_step(0.5, self.next_wp) 
+                control = self.PID.run_step(1, self.next_wp) 
                 self.vehicle.apply_control(control)
 
             await asyncio.sleep(1)
