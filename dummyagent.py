@@ -49,7 +49,7 @@ class DummyAgent(agent.Agent):
             await asyncio.sleep(0.5)
             
             vehicle_wp = self.map.get_waypoint(self.vehicle.get_location())
-            self.next_wp = random.choice(vehicle_wp.next(10.0))
+            self.next_wp = vehicle_wp.next(10.0)[0]
             control = self.PID.run_step(10, self.next_wp)
             self.vehicle.apply_control(control)
             
@@ -64,7 +64,7 @@ class DummyAgent(agent.Agent):
             print("Distancia: ", dist)
             if dist < 2:
                 print("Cerca del siguiente punto")
-                self.next_wp = random.choice(vehicle_wp.next(10.0))
+                self.next_wp = vehicle_wp.next(10.0)[0]
                
             await asyncio.sleep(0.5)
 
