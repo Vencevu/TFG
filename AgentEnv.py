@@ -11,14 +11,15 @@ class CarAgent(agent.Agent):
 
 
         async def on_start(self):
-            env = CarlaEnv()
-            env.gen_vehicle()
+            self.env = CarlaEnv()
+            self.env.gen_vehicle()
             await asyncio.sleep(1)
 
         async def run(self):
             await asyncio.sleep(0.5)
 
         async def on_end(self):
+            self.env.destroy_all_actors()
             print("Behaviour finished with exit code {}.".format(self.exit_code))
 
     async def setup(self):

@@ -13,11 +13,11 @@ class CarlaEnv:
     def reset(self):
         pass
 
-    def end_env(self):
+    def destroy_all_actors(self):
         self.client.apply_batch([carla.command.DestroyActor(x) for x in self.actor_list])
 
     def gen_vehicle(self):
-        bp = random.choice(self.blueprint_library.filter('vehicle'))
+        bp = self.blueprint_library.filter('vehicle')[0]
         transform = self.map.get_spawn_points()[0]
         self.vehicle = self.world.spawn_actor(bp, transform) 
         self.actor_list.append(self.vehicle)
