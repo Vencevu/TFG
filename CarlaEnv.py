@@ -1,7 +1,5 @@
 import carla
-import asyncio
 import random
-import time
 
 class CarlaEnv:
 
@@ -14,6 +12,9 @@ class CarlaEnv:
 
     def reset(self):
         pass
+
+    def end_env(self):
+        self.client.apply_batch([carla.command.DestroyActor(x) for x in self.actor_list])
 
     def gen_vehicle(self):
         bp = random.choice(self.blueprint_library.filter('vehicle'))

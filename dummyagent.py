@@ -2,7 +2,6 @@ import carla
 import asyncio
 import random
 import time
-import math
 from spade import agent, quit_spade
 from spade.behaviour import CyclicBehaviour
 from agents.navigation.controller import VehiclePIDController
