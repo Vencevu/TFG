@@ -20,3 +20,11 @@ class CarlaEnv:
         transform = self.map.get_spawn_points()[0]
         self.vehicle = self.world.spawn_actor(bp, transform) 
         self.actor_list.append(self.vehicle)
+
+    def car_step(self, action):
+        if action == 0:
+            self.car_velocity = 0
+        if action == 1:
+            self.car_velocity = 10
+        
+        return self.car_velocity
