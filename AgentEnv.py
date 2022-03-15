@@ -9,7 +9,6 @@ class CarAgent(agent.Agent):
     #Comportamiento del agente
     class MyBehav(CyclicBehaviour):
 
-
         async def on_start(self):
             self.env = CarlaEnv()
             self.env.gen_vehicle()
