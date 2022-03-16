@@ -10,7 +10,8 @@ class CarlaEnv:
         self.blueprint_library = self.world.get_blueprint_library()
 
     def reset(self):
-        pass
+        self.destroy_all_actors()
+        self.gen_vehicle()
 
     def destroy_all_actors(self):
         self.client.apply_batch([carla.command.DestroyActor(x) for x in self.actor_list])

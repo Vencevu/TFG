@@ -1,8 +1,10 @@
 from spade import agent, quit_spade
 from spade.behaviour import CyclicBehaviour
-from CarlaEnv import CarlaEnv
 import time
 import asyncio
+
+from CarlaEnv import CarlaEnv
+from DQNEnv import DQNAgent
 
 class CarAgent(agent.Agent):
 
@@ -10,12 +12,13 @@ class CarAgent(agent.Agent):
     class MyBehav(CyclicBehaviour):
 
         async def on_start(self):
+            self.agent_dqn = DQNAgent()
             self.env = CarlaEnv()
             self.env.gen_vehicle()
             await asyncio.sleep(1)
 
         async def run(self):
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(1)
 
         async def on_end(self):
             self.env.destroy_all_actors()
