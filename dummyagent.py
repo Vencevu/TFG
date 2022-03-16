@@ -73,7 +73,6 @@ class DummyAgent(agent.Agent):
 
     my_behav = MyBehav()
     async def setup(self):
-        self.my_behav = self.MyBehav()
         self.add_behaviour(self.my_behav)
 
 

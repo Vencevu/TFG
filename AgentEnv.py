@@ -12,7 +12,7 @@ class CarAgent(agent.Agent):
     class MyBehav(CyclicBehaviour):
 
         async def on_start(self):
-            self.agent_dqn = DQNAgent()
+            #self.agent_dqn = DQNAgent()
             self.env = CarlaEnv()
             self.env.gen_vehicle()
             await asyncio.sleep(1)
@@ -24,8 +24,9 @@ class CarAgent(agent.Agent):
             self.env.destroy_all_actors()
             print("Behaviour finished with exit code {}.".format(self.exit_code))
 
+    my_behav = MyBehav()
+    
     async def setup(self):
-        self.my_behav = self.MyBehav()
         self.add_behaviour(self.my_behav)
 
 
