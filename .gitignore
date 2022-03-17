@@ -2,3 +2,4 @@ CARLA/
 test_images/
 DQN/
 __pycache__/
+self.log_dir/
