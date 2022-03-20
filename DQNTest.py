@@ -18,6 +18,8 @@ class DQNAgent:
 
         self.replay_memory = deque(maxlen=Config.REPLAY_MEMORY_SIZE)
 
+        self.tensorboard = ModifiedTensorBoard(log_dir=f"logs/{Config.MODEL_NAME}-{int(time.time())}")
+
         
     def create_model(self):
         ## input: RGB data, should be normalized when coming into CNN
