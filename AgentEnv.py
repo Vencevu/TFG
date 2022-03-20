@@ -12,7 +12,7 @@ class CarAgent(agent.Agent):
     class MyBehav(CyclicBehaviour):
 
         async def on_start(self):
-            #self.agent_dqn = DQNAgent()
+            self.agent_dqn = DQNAgent()
             self.env = CarlaEnv()
             self.env.gen_vehicle()
             await asyncio.sleep(1)
