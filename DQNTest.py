@@ -16,6 +16,8 @@ class DQNAgent:
         self.target_model = self.create_model()
         self.target_model.set_weights(self.model.get_weights())
 
+        self.replay_memory = deque(maxlen=Config.REPLAY_MEMORY_SIZE)
+
         
     def create_model(self):
         ## input: RGB data, should be normalized when coming into CNN
