@@ -7,7 +7,7 @@ class CarlaEnv:
     def __init__(self):
         self.reward = Config.MIN_REWARD
         self.done = False
-        
+
         self.actor_list = []
         self.client = carla.Client('127.0.0.1', 2000)
         self.client.set_timeout(2.0)
@@ -43,6 +43,6 @@ class CarlaEnv:
         if(vel < 10 or vel > 30):
             self.reward = Config.MIN_REWARD
         else:
-            self.reward = Config.MIN_REWARD * 3
+            self.reward = Config.INT_REWARD
         
         return self.car_velocity, self.reward, self.done
