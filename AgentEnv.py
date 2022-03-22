@@ -16,8 +16,7 @@ class CarAgent(agent.Agent):
 
         def dqn_car(self):
             for self.episode in tqdm(range(1, Config.EPISODES + 1)):
-                # try:
-                # Restarting episode - reset episode reward and step number
+                self.env.reset()
                 self.episode_reward = 0
                 self.step = 1
 
@@ -66,17 +65,11 @@ class CarAgent(agent.Agent):
             self.agent_dqn.save_rl_model()
 
             self.episode = 0
-            self.end_dqn = False
 
         async def on_start(self):
             self.agent_dqn = DQNAgent()
             self.env = CarlaEnv()
 
-            self.env.gen_vehicle()
-            await asyncio.sleep(1)
-            self.env.add_sensor("rgb_cam")
-            await asyncio.sleep(1)
-            
             self.epsilon = 0
             self.ep_rewards = [Config.MIN_REWARD]
             self.current_state = self.env.front_camera

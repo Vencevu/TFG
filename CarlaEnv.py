@@ -1,5 +1,6 @@
 import carla
 import math
+import time
 import numpy as np
 import Config
 
@@ -21,6 +22,9 @@ class CarlaEnv:
     def reset(self):
         self.destroy_all_actors()
         self.gen_vehicle()
+        time.sleep(0.5)
+        self.add_sensor("rgb_cam")
+        self.episode_start = time.time()
 
     def destroy_all_actors(self):
         self.client.apply_batch([carla.command.DestroyActor(x) for x in self.actor_list])
@@ -34,8 +38,8 @@ class CarlaEnv:
     def add_sensor(self, sensor):
         if sensor == "rgb_cam":
             bp = self.blueprint_library.find('sensor.camera.rgb')
-            bp.set_attribute('image_size_x', Config.IM_WIDTH)
-            bp.set_attribute('image_size_y', Config.IM_HEIGHT)
+            bp.set_attribute('image_size_x', str(Config.IM_WIDTH))
+            bp.set_attribute('image_size_y', str(Config.IM_HEIGHT))
             bp.set_attribute('fov', '110')
             bp.set_attribute('sensor_tick', '1.0')
             transform = carla.Transform(carla.Location(x=0.8, z=1.7))
@@ -60,8 +64,14 @@ class CarlaEnv:
 
         if(vel < 10 or vel > 30):
             self.reward = Config.MIN_REWARD
+            self.done = False
         else:
             self.reward = Config.INT_REWARD
+            self.done = False
+        
+        if self.episode_start + Config.SECONDS_PER_EPISODE < time.time():  ## when to stop
+            self.done = True
+            print("Time-Reset...")
         
         return self.front_camera, vel, self.reward, self.done, None
 
