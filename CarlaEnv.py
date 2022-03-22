@@ -1,8 +1,11 @@
 import carla
 import math
+import numpy as np
 import Config
 
 class CarlaEnv:
+
+    front_camera = None
 
     def __init__(self):
         self.reward = Config.MIN_REWARD
@@ -28,6 +31,18 @@ class CarlaEnv:
         self.vehicle = self.world.spawn_actor(bp, transform) 
         self.actor_list.append(self.vehicle)
 
+    def add_sensor(self, sensor):
+        if sensor == "rgb_cam":
+            bp = self.blueprint_library.find('sensor.camera.rgb')
+            bp.set_attribute('image_size_x', Config.IM_WIDTH)
+            bp.set_attribute('image_size_y', Config.IM_HEIGHT)
+            bp.set_attribute('fov', '110')
+            bp.set_attribute('sensor_tick', '1.0')
+            transform = carla.Transform(carla.Location(x=0.8, z=1.7))
+            sensor = self.world.spawn_actor(bp, transform, attach_to=self.vehicle)
+            self.actor_list.append(sensor)
+            sensor.listen(lambda data: self.process_img(data))
+
     def vehicle_velocity(self):
         v = self.vehicle.get_velocity()
         kmh = int(3.6 * math.sqrt(v.x**2 + v.y**2 + v.z**2))
@@ -35,14 +50,23 @@ class CarlaEnv:
 
     def step(self, action):
         if action == 0:
-            self.vehicle.apply_control(carla.VehicleControl(throttle=0.50, brake=0))
+            self.vehicle.apply_control(carla.VehicleControl(throttle=1, brake=0))
         elif action == 1:
             self.vehicle.apply_control(carla.VehicleControl(throttle=0.0, brake=0.50))
+        elif action == 2:
+            self.vehicle.apply_control(carla.VehicleControl(throttle=0.50, brake=0))
     
         vel = self.vehicle_velocity()
+
         if(vel < 10 or vel > 30):
             self.reward = Config.MIN_REWARD
         else:
             self.reward = Config.INT_REWARD
         
-        return self.reward, self.done, None
+        return self.front_camera, vel, self.reward, self.done, None
+
+    def process_img(self, image):
+        i = np.array(image.raw_data)
+        i2 = i.reshape((Config.IM_HEIGHT, Config.IM_WIDTH, 4))
+        i3 = i2[:, :, :3]
+        self.front_camera = i3

@@ -1,5 +1,6 @@
 from spade import agent, quit_spade
 from spade.behaviour import CyclicBehaviour
+from tqdm import tqdm
 import time
 import asyncio
 
