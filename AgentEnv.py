@@ -42,7 +42,8 @@ class CarAgent(agent.Agent):
                         # This takes no time, so we add a delay matching 60 FPS (prediction above takes longer)
                         time.sleep(1 / Config.FPS)
                     
-                    new_state, car_velocity, reward, self.done, _ = self.env.step(action)
+                    distance = self.env.distance_to_goal(self.goal_x, self.goal_y)
+                    new_state, car_velocity, reward, self.done, _ = self.env.step(action, distance)
 
                     self.current_state = new_state
                     self.agent_dqn.update_replay_memory((self.current_state, action, reward, new_state, self.done))
@@ -70,6 +71,9 @@ class CarAgent(agent.Agent):
         async def on_start(self):
             self.agent_dqn = DQNAgent()
             self.env = CarlaEnv()
+
+            self.goal_x = -51
+            self.goal_y = 24
 
             self.epsilon = 0
             self.ep_rewards = [Config.MIN_REWARD]
