@@ -82,10 +82,9 @@ class CarAgent(agent.Agent):
         async def on_end(self):
             self.env.destroy_all_actors()
             print("Behaviour finished with exit code {}.".format(self.exit_code))
-
-    my_behav = MyBehav()
     
     async def setup(self):
+        self.my_behav = self.MyBehav()
         self.add_behaviour(self.my_behav)
 
 
@@ -93,12 +92,11 @@ class CarAgent(agent.Agent):
 dummy = CarAgent("agente@localhost", "1234")
 dummy.start()
 
-while not dummy.my_behav.is_killed():
+while dummy.is_alive():
     try:
         time.sleep(1)
     except KeyboardInterrupt:
-        dummy.my_behav.kill()
-        time.sleep(2)
+        dummy.stop()
+        time.sleep(1)
 
-dummy.stop()
 quit_spade()
