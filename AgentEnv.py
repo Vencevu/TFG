@@ -63,8 +63,9 @@ class CarAgent(agent.Agent):
                                                             epsilon=Config.epsilon)
             
             self.agent_dqn.save_rl_model()
-
+            self.env.destroy_all_actors()
             self.episode = 0
+            self.kill()
 
         async def on_start(self):
             self.agent_dqn = DQNAgent()
