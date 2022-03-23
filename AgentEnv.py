@@ -91,13 +91,17 @@ class CarAgent(agent.Agent):
 
 #Lanzamos el agente
 dummy = CarAgent("agente@localhost", "1234")
-dummy.start()
+future = dummy.start()
+time.sleep(1)
+future.result()
 
 while dummy.is_alive():
     try:
         time.sleep(1)
     except KeyboardInterrupt:
         dummy.stop()
-        time.sleep(1)
+        break
+
+print("Agents finished")
 
 quit_spade()
