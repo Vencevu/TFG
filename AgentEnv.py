@@ -72,7 +72,7 @@ class CarAgent(agent.Agent):
             self.agent_dqn = DQNAgent()
             self.env = CarlaEnv()
 
-            self.goal_x = -71
+            self.goal_x = -31
             self.goal_y = 24
 
             self.epsilon = 0
