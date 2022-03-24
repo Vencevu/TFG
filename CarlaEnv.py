@@ -63,26 +63,25 @@ class CarlaEnv:
 
     def step(self, action, distance):
         if action == 0:
-            self.vehicle.apply_control(carla.VehicleControl(throttle=0.50, brake=0))
+            self.vehicle.apply_control(carla.VehicleControl(throttle=1, brake=0))
         elif action == 1:
-            self.vehicle.apply_control(carla.VehicleControl(throttle=0.0, brake=0.50))
+            self.vehicle.apply_control(carla.VehicleControl(throttle=0, brake=1))
         elif action == 2:
-            self.vehicle.apply_control(carla.VehicleControl(throttle=0.0, brake=0.00))
+            self.vehicle.apply_control(carla.VehicleControl(throttle=0.50, brake=0))
+        elif action == 3:
+            self.vehicle.apply_control(carla.VehicleControl(throttle=0, brake=0.50))
     
         vel = self.vehicle_velocity()
 
-        if(vel < 10 or vel > 30):
+        if(vel < 5 or vel > 20):
             self.reward = Config.MIN_REWARD
             self.done = False
         else:
             self.reward = Config.INT_REWARD
             self.done = False
         
-        if distance > 7:
-            self.reward += Config.MIN_REWARD * 3
-            self.done = False
-        elif distance > 2:
-            self.reward += Config.MIN_REWARD
+        if distance > 2:
+            self.reward += Config.INT_REWARD * (1/distance)
             self.done = False
         else:
             self.reward += Config.MAX_REWARD
