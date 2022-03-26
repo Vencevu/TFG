@@ -36,8 +36,8 @@ class CarlaEnv:
         self.vehicle = self.world.try_spawn_actor(bp, transform) 
         self.actor_list.append(self.vehicle)
 
-    def add_sensor(self, sensor):
-        if sensor == "rgb_cam":
+    def add_sensor(self, sensor_name):
+        if sensor_name == "rgb_cam":
             bp = self.blueprint_library.find('sensor.camera.rgb')
             bp.set_attribute('image_size_x', str(Config.IM_WIDTH))
             bp.set_attribute('image_size_y', str(Config.IM_HEIGHT))

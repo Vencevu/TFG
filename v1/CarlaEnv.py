@@ -36,8 +36,8 @@ class CarlaEnv:
         self.vehicle = self.world.try_spawn_actor(bp, transform) 
         self.actor_list.append(self.vehicle)
 
-    def add_sensor(self, sensor):
-        if sensor == "rgb_cam":
+    def add_sensor(self, sensor_name):
+        if sensor_name == "rgb_cam":
             bp = self.blueprint_library.find('sensor.camera.rgb')
             bp.set_attribute('image_size_x', str(Config.IM_WIDTH))
             bp.set_attribute('image_size_y', str(Config.IM_HEIGHT))
@@ -48,11 +48,11 @@ class CarlaEnv:
             self.actor_list.append(sensor)
             sensor.listen(lambda data: self.process_img(data))
         
-        if sensor == "obstacle_detector":
+        if sensor_name == "obstacle_detector":
             bp = self.blueprint_library.find('sensor.other.obstacle')
             bp.set_attribute('sensor_tick', '1.0')
 
-            transform = carla.Transform(carla.Location(x=0.8, z=1.7))
+            transform = carla.Transform(carla.Location(x = 0.8, z = 1))
             sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
             self.actor_list.append(sensor)
 
