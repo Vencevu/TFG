@@ -56,7 +56,7 @@ class CarlaEnv:
             sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
             self.actor_list.append(sensor)
 
-            transform = carla.Transform(carla.Location(x = 0.8, y = 0.1, z = 1))
+            transform = carla.Transform(carla.Location(x = 0.8, y = 0.5, z = 1))
             sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
             self.actor_list.append(sensor)
 
