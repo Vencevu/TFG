@@ -7,6 +7,7 @@ import Config
 class CarlaEnv:
 
     front_camera = None
+    collision = None
 
     def __init__(self):
         self.reward = Config.MIN_REWARD
@@ -67,6 +68,7 @@ class CarlaEnv:
             transform = carla.Transform(carla.Location(z=1))
             sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
             self.actor_list.append(sensor)
+            sensor.listen(lambda data: self.process_col(data))
 
 
     def vehicle_velocity(self):
@@ -94,7 +96,7 @@ class CarlaEnv:
     
         vel = self.vehicle_velocity()
 
-        if(vel < 5 or vel > 20):
+        if vel < 5 or vel > 20:
             self.reward = Config.MIN_REWARD
             self.done = False
         else:
@@ -109,6 +111,11 @@ class CarlaEnv:
             self.done = True
             print("Objetivo alcanzado")
         
+        if self.collision != None:
+            self.done = True
+            self.reward = Config.MIN_REWARD
+            print("Collision-Reset...")
+
         if self.episode_start + Config.SECONDS_PER_EPISODE < time.time():  ## when to stop
             self.done = True
             self.reward += Config.MIN_REWARD
@@ -122,3 +129,6 @@ class CarlaEnv:
         i2 = i.reshape((Config.IM_HEIGHT, Config.IM_WIDTH, 4))
         i3 = i2[:, :, :3]
         self.front_camera = i3
+
+    def process_col(self, col):
+        self.collision = col
