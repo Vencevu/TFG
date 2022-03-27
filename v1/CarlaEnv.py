@@ -25,6 +25,8 @@ class CarlaEnv:
         self.gen_vehicle()
         time.sleep(0.5)
         self.add_sensor("rgb_cam")
+        self.add_sensor("obs_det")
+        self.add_sensor("col_det")
         self.episode_start = time.time()
 
     def destroy_all_actors(self):
@@ -48,7 +50,7 @@ class CarlaEnv:
             self.actor_list.append(sensor)
             sensor.listen(lambda data: self.process_img(data))
         
-        if sensor_name == "obstacle_detector":
+        if sensor_name == "obs_det":
             bp = self.blueprint_library.find('sensor.other.obstacle')
             bp.set_attribute('sensor_tick', '1.0')
 
@@ -57,6 +59,12 @@ class CarlaEnv:
             self.actor_list.append(sensor)
 
             transform = carla.Transform(carla.Location(x = 0.8, y = 0.5, z = 1))
+            sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
+            self.actor_list.append(sensor)
+        
+        if sensor_name == "col_det":
+            bp = self.blueprint_library.find('sensor.other.collision')
+            transform = carla.Transform(carla.Location(z=1))
             sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
             self.actor_list.append(sensor)
 
