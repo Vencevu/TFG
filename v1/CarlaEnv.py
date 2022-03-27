@@ -96,6 +96,7 @@ class CarlaEnv:
     
         vel = self.vehicle_velocity()
 
+        # Penalizacion por velocidad
         if vel < 5 or vel > 20:
             self.reward = Config.MIN_REWARD
             self.done = False
@@ -103,6 +104,7 @@ class CarlaEnv:
             self.reward = Config.INT_REWARD
             self.done = False
         
+        # Recompensa en funcion de cuanto se acerca al objetivo
         if distance > 2:
             self.reward += Config.INT_REWARD * (1/distance)
             self.done = False
@@ -111,12 +113,14 @@ class CarlaEnv:
             self.done = True
             print("Objetivo alcanzado")
         
+        # Reinicio por colision
         if self.collision != None:
             self.done = True
             self.reward = Config.MIN_REWARD
             print("Collision-Reset...")
-
-        if self.episode_start + Config.SECONDS_PER_EPISODE < time.time():  ## when to stop
+            
+        # Reinicio por tiempo
+        if self.episode_start + Config.SECONDS_PER_EPISODE < time.time():  
             self.done = True
             self.reward += Config.MIN_REWARD
             print("Time-Reset...")
