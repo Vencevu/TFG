@@ -43,7 +43,7 @@ class CarAgent(agent.Agent):
                         action = np.argmax(self.agent_dqn.get_qs(self.current_state))
                     else:
                         # Get random action
-                        action = np.random.randint(0, 4)
+                        action = np.random.randint(0, 2)
                         # This takes no time, so we add a delay matching 60 FPS (prediction above takes longer)
                         time.sleep(1 / Config.FPS)
                     

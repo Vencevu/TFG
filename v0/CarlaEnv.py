@@ -66,10 +66,6 @@ class CarlaEnv:
             self.vehicle.apply_control(carla.VehicleControl(throttle=1, brake=0))
         elif action == 1:
             self.vehicle.apply_control(carla.VehicleControl(throttle=0, brake=1))
-        elif action == 2:
-            self.vehicle.apply_control(carla.VehicleControl(throttle=0.50, brake=0))
-        elif action == 3:
-            self.vehicle.apply_control(carla.VehicleControl(throttle=0, brake=0.50))
     
         vel = self.vehicle_velocity()
 

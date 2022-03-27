@@ -76,13 +76,13 @@ class CarlaEnv:
 
     def step(self, action, distance):
         if action == 0:
-            self.vehicle.apply_control(carla.VehicleControl(throttle=1, brake=0))
+            self.vehicle.apply_control(carla.VehicleControl(throttle=0.7, brake=0))
         elif action == 1:
-            self.vehicle.apply_control(carla.VehicleControl(throttle=0, brake=1))
+            self.vehicle.apply_control(carla.VehicleControl(throttle=0, brake=0.7))
         elif action == 2:
-            self.vehicle.apply_control(carla.VehicleControl(throttle=0.50, brake=0))
+            self.vehicle.apply_control(carla.VehicleControl(throttle=0.70, steer=0.5, brake=0))
         elif action == 3:
-            self.vehicle.apply_control(carla.VehicleControl(throttle=0, brake=0.50))
+            self.vehicle.apply_control(carla.VehicleControl(throttle=0.70, steer=-0.5, brake=0))
     
         vel = self.vehicle_velocity()
 
