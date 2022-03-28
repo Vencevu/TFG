@@ -81,7 +81,7 @@ class DQNAgent:
         x = GlobalAveragePooling2D()(x)
         x = Flatten()(x)
 
-        predictions = Dense(2, activation="linear")(x)  ## output layer include 2 nuros, representing 2 actions
+        predictions = Dense(Config.N_ACTIONS, activation="linear")(x)  ## output layer include 2 nuros, representing 2 actions
         model = Model(inputs=base_model.input, outputs=predictions)
         # model.compile(loss="mse", optimizer=Adam(lr=0.001), metrics=["accuracy"])
         model.compile(loss="mse", optimizer='adam', metrics=["accuracy"])

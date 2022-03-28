@@ -16,7 +16,7 @@ class CarAgent(agent.Agent):
     class MyBehav(CyclicBehaviour):
 
         def dqn_car(self):
-            epsilon = 0
+            epsilon = Config.epsilon
             ep_rewards = [Config.MIN_REWARD]
 
             for self.episode in tqdm(range(1, Config.EPISODES + 1)):
@@ -38,12 +38,12 @@ class CarAgent(agent.Agent):
                     # np.random.random() will give us the random number between 0 and 1. If this number is greater than
                     # our randomness variable,
                     # we will get Q values based on tranning, but otherwise, we will go random actions.
-                    if np.random.random() > Config.epsilon:
+                    if np.random.random() > epsilon:
                         # Get action from Q table
                         action = np.argmax(self.agent_dqn.get_qs(self.current_state))
                     else:
                         # Get random action
-                        action = np.random.randint(0, 2)
+                        action = np.random.randint(0, Config.N_ACTIONS)
                         # This takes no time, so we add a delay matching 60 FPS (prediction above takes longer)
                         time.sleep(1 / Config.FPS)
                     
@@ -66,7 +66,7 @@ class CarAgent(agent.Agent):
                     max_reward = max(ep_rewards[-Config.AGGREGATE_STATS_EVERY:])
                     self.agent_dqn.tensorboard.update_stats(reward_avg=average_reward, reward_min=min_reward,
                                                             reward_max=max_reward,
-                                                            epsilon=Config.epsilon)
+                                                            epsilon=epsilon)
 
                 if epsilon > Config.MIN_EPSILON:
                     epsilon *= Config.EPSILON_DECAY
