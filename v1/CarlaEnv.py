@@ -58,10 +58,12 @@ class CarlaEnv:
             transform = carla.Transform(carla.Location(x = 0.8, y = -0.5, z = 1))
             sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
             self.actor_list.append(sensor)
+            sensor.listen(lambda data: self.process_obs(data))
 
             transform = carla.Transform(carla.Location(x = 0.8, y = 0.5, z = 1))
             sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
             self.actor_list.append(sensor)
+            sensor.listen(lambda data: self.process_obs(data))
         
         if sensor_name == "col_det":
             bp = self.blueprint_library.find('sensor.other.collision')
@@ -85,6 +87,8 @@ class CarlaEnv:
         return math.sqrt(pow((a), 2) + pow((b), 2))
 
     def step(self, action, distance):
+        self.done = False
+        
         if action == 0:
             self.vehicle.apply_control(carla.VehicleControl(throttle=0.7, brake=0))
         elif action == 1:
@@ -99,26 +103,28 @@ class CarlaEnv:
         # Penalizacion por velocidad
         if vel < 5 or vel > 20:
             self.reward = Config.MIN_REWARD
-            self.done = False
         else:
             self.reward = Config.INT_REWARD
-            self.done = False
         
         # Recompensa en funcion de cuanto se acerca al objetivo
         if distance > 2:
             self.reward += Config.INT_REWARD * (1/distance)
-            self.done = False
         else:
             self.reward += Config.MAX_REWARD
             self.done = True
             print("Objetivo alcanzado")
-        
+
+        # Penalizacion por aproximacion a obstaculo
+        if self.obstacle != None:
+            self.reward += Config.MIN_REWARD / self.obstacle.distance
+            self.obstacle = None
+
         # Reinicio por colision
         if self.collision != None:
             self.done = True
             self.reward = Config.MIN_REWARD
             print("Collision-Reset...")
-            
+
         # Reinicio por tiempo
         if self.episode_start + Config.SECONDS_PER_EPISODE < time.time():  
             self.done = True
@@ -136,3 +142,6 @@ class CarlaEnv:
 
     def process_col(self, col):
         self.collision = col
+
+    def process_obs(self, obs):
+        self.obstacle = obs
