@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import time
-
+#La grafica no me da para el simulador y la DQN al mismo tiempo :v
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
