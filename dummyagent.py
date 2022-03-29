@@ -33,7 +33,7 @@ class DummyAgent(agent.Agent):
             blueprint_library = self.world.get_blueprint_library()
             bp = random.choice(blueprint_library.filter('vehicle'))
             transform = self.map.get_spawn_points()[0]
-            transform.location.x -= 15
+            transform.location.x -= 25
             self.vehicle = self.world.spawn_actor(bp, transform) 
             self.actor_list.append(self.vehicle)
             await asyncio.sleep(1)
@@ -46,7 +46,7 @@ class DummyAgent(agent.Agent):
             self.PID = VehiclePIDController(self.vehicle,args_lateral=args_lateral_dict,args_longitudinal=args_long_dict)
             
             vehicle_wp = self.map.get_waypoint(self.vehicle.get_location())
-            self.next_wp = vehicle_wp.next(10.0)[0]
+            self.next_wp = vehicle_wp.next(4)[0]
             control = self.PID.run_step(10, self.next_wp)
             self.vehicle.apply_control(control)
             
@@ -61,7 +61,7 @@ class DummyAgent(agent.Agent):
             print("Distancia: ", dist)
             if dist < 2:
                 print("Cerca del siguiente punto")
-                posibles_puntos = vehicle_wp.next(10.0)
+                posibles_puntos = vehicle_wp.next(4)
                 print("Posibles puntos:")
                 print("--------------------------------------------------")
                 for p in posibles_puntos:
