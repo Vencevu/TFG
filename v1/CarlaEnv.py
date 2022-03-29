@@ -1,3 +1,4 @@
+from cmath import inf
 import carla
 import math
 import time
@@ -8,6 +9,7 @@ class CarlaEnv:
 
     front_camera = None
     collision = None
+    distance_to_obstacle = 0
 
     def __init__(self):
         self.reward = Config.MIN_REWARD
@@ -88,7 +90,7 @@ class CarlaEnv:
 
     def step(self, action, distance):
         self.done = False
-        
+
         if action == 0:
             self.vehicle.apply_control(carla.VehicleControl(throttle=0.7, brake=0))
         elif action == 1:
@@ -115,9 +117,9 @@ class CarlaEnv:
             print("Objetivo alcanzado")
 
         # Penalizacion por aproximacion a obstaculo
-        if self.obstacle != None:
-            self.reward += Config.MIN_REWARD / self.obstacle.distance
-            self.obstacle = None
+        if self.distance_to_obstacle > 0:
+            self.reward += Config.MIN_REWARD / self.distance_to_obstacle
+            self.distance_to_obstacle = 0
 
         # Reinicio por colision
         if self.collision != None:
@@ -144,4 +146,7 @@ class CarlaEnv:
         self.collision = col
 
     def process_obs(self, obs):
-        self.obstacle = obs
+        if obs != None:
+            self.distance_to_obstacle = obs.distance
+        else:
+            self.distance_to_obstacle = 0

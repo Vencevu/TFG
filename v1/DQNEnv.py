@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 import time
 
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 import Config
 import random
 import numpy as np
@@ -24,7 +27,13 @@ class DQNAgent:
         # Un objeto Session encapsula el entorno en el que se ejecutan los objetos Operation
         # y se evalúan los objetos Tensor.
 
-        self.sess = tf.compat.v1.Session()
+        # self.sess = tf.compat.v1.Session()
+        # tf.compat.v1.keras.backend.set_session(self.sess)
+
+        config = tf.compat.v1.ConfigProto()
+        config.gpu_options.allow_growth = True
+        self.sess= tf.compat.v1.Session(config=config)
+
         tf.compat.v1.keras.backend.set_session(self.sess)
 
         # ## target model (this is what we .predict against every step)
