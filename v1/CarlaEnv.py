@@ -126,6 +126,7 @@ class CarlaEnv:
             self.done = True
             self.reward = Config.MIN_REWARD
             print("Collision-Reset...")
+            self.collision = None
 
         # Reinicio por tiempo
         if self.episode_start + Config.SECONDS_PER_EPISODE < time.time():  
