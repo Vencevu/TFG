@@ -46,7 +46,7 @@ class DummyAgent(agent.Agent):
             self.PID = VehiclePIDController(self.vehicle,args_lateral=args_lateral_dict,args_longitudinal=args_long_dict)
             
             vehicle_wp = self.map.get_waypoint(self.vehicle.get_location())
-            self.next_wp = vehicle_wp.next(4)[0]
+            self.next_wp = vehicle_wp.next(10)[0]
             control = self.PID.run_step(10, self.next_wp)
             self.vehicle.apply_control(control)
             
@@ -59,9 +59,9 @@ class DummyAgent(agent.Agent):
             vehicle_wp = self.map.get_waypoint(vehicle_loc)
             dist = self.next_wp.transform.location.distance(vehicle_loc)
             print("Distancia: ", dist)
-            if dist < 2:
+            if dist < 1:
                 print("Cerca del siguiente punto")
-                posibles_puntos = vehicle_wp.next(4)
+                posibles_puntos = vehicle_wp.next(10)
                 print("Posibles puntos:")
                 print("--------------------------------------------------")
                 for p in posibles_puntos:
