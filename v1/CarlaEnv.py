@@ -124,7 +124,7 @@ class CarlaEnv:
         # Reinicio por colision
         if self.collision != None:
             self.done = True
-            self.reward = Config.MIN_REWARD
+            self.reward = Config.MIN_REWARD * 3
             print("Collision-Reset...")
             self.collision = None
 
