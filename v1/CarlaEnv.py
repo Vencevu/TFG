@@ -24,9 +24,7 @@ class CarlaEnv:
 
     def reset(self):
         self.destroy_all_actors()
-        time.sleep(0.5)
         self.gen_vehicle()
-        time.sleep(0.5)
         self.add_sensor("rgb_cam")
         self.add_sensor("obs_det")
         self.add_sensor("col_det")
@@ -123,10 +121,11 @@ class CarlaEnv:
 
         # Reinicio por colision
         if self.collision != None:
+            self.collision = None
             self.done = True
             self.reward = Config.MIN_REWARD * 3
             print("Collision-Reset...")
-            self.collision = None
+            
 
         # Reinicio por tiempo
         if self.episode_start + Config.SECONDS_PER_EPISODE < time.time():  
