@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import time
+#Las advertencias se ignoran equisde
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning) 
 #La grafica no me da para el simulador y la DQN al mismo tiempo :v
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
@@ -33,8 +36,6 @@ class DQNAgent:
         # config = tf.compat.v1.ConfigProto()
         # config.gpu_options.allow_growth = True
         # self.sess= tf.compat.v1.Session(config=config)
-
-        tf.compat.v1.keras.backend.set_session(self.sess)
 
         # ## target model (this is what we .predict against every step)
         # self.target_model = self.create_model()
