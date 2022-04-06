@@ -47,12 +47,12 @@ class DummyAgent(agent.Agent):
             
             vehicle_wp = self.map.get_waypoint(self.vehicle.get_location())
             self.next_wp = vehicle_wp.next(10)[0]
-            control = self.PID.run_step(10, self.next_wp)
+            control = self.PID.run_step(5, self.next_wp)
             self.vehicle.apply_control(control)
             
 
         async def run(self):
-            control = self.PID.run_step(10, self.next_wp)
+            control = self.PID.run_step(5, self.next_wp)
             self.vehicle.apply_control(control)
 
             vehicle_loc = self.vehicle.get_location()
