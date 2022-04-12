@@ -28,7 +28,9 @@ class CarlaEnv:
         self.gen_vehicle()
         time.sleep(1 / Config.FPS)
         self.add_sensor("rgb_cam")
+        time.sleep(1 / Config.FPS)
         self.add_sensor("obs_det")
+        time.sleep(1 / Config.FPS)
         self.add_sensor("col_det")
         self.episode_start = time.time()
 
