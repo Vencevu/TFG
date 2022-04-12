@@ -1,5 +1,5 @@
 import warnings
-warnings.filterwarnings("ignore") 
+warnings.filterwarnings("ignore")
 
 from spade import agent, quit_spade
 from spade.behaviour import CyclicBehaviour

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+
+
 import time
 #La grafica no me da para el simulador y la DQN al mismo tiempo :v
 import os
@@ -14,6 +16,7 @@ from keras.callbacks import TensorBoard
 from keras.applications.xception import Xception
 from keras.layers import Dense, GlobalAveragePooling2D, Flatten
 
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 class DQNAgent:
     def __init__(self):
