@@ -95,7 +95,7 @@ class CarAgent(agent.Agent):
             self.env = CarlaEnv()
 
             self.goal_x = -45
-            self.goal_y = 50
+            self.goal_y = 34
 
             self.current_state = self.env.front_camera
 

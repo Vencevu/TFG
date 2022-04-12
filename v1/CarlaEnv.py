@@ -24,7 +24,9 @@ class CarlaEnv:
 
     def reset(self):
         self.destroy_all_actors()
+        time.sleep(1 / Config.FPS)
         self.gen_vehicle()
+        time.sleep(1 / Config.FPS)
         self.add_sensor("rgb_cam")
         self.add_sensor("obs_det")
         self.add_sensor("col_det")
