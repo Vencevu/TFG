@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 import time
-#Las advertencias se ignoran equisde
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning) 
 #La grafica no me da para el simulador y la DQN al mismo tiempo :v
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
