@@ -9,6 +9,7 @@ class CarlaEnv:
 
     front_camera = None
     collision = None
+    vehicle = None
     distance_to_obstacle = 0
 
     def __init__(self):
@@ -24,13 +25,9 @@ class CarlaEnv:
 
     def reset(self):
         self.destroy_all_actors()
-        time.sleep(1 / Config.FPS)
         self.gen_vehicle()
-        time.sleep(1 / Config.FPS)
         self.add_sensor("rgb_cam")
-        time.sleep(1 / Config.FPS)
         self.add_sensor("obs_det")
-        time.sleep(1 / Config.FPS)
         self.add_sensor("col_det")
         self.episode_start = time.time()
 
@@ -40,9 +37,13 @@ class CarlaEnv:
     def gen_vehicle(self):
         bp = self.blueprint_library.filter('vehicle')[0]
         transform = self.map.get_spawn_points()[0]
-        transform.location.x -= 20
+        transform.location.x -= 10
         self.vehicle = self.world.try_spawn_actor(bp, transform) 
+        while(self.vehicle == None):
+            transform.location.x -= 1
+            self.vehicle = self.world.try_spawn_actor(bp, transform) 
         self.actor_list.append(self.vehicle)
+        
 
     def add_sensor(self, sensor_name):
         if sensor_name == "rgb_cam":
@@ -112,7 +113,7 @@ class CarlaEnv:
             self.reward = Config.INT_REWARD
         
         # Recompensa en funcion de cuanto se acerca al objetivo
-        if distance > 2:
+        if distance > 1:
             self.reward += Config.INT_REWARD * (1/distance)
         else:
             self.reward += Config.MAX_REWARD
