@@ -34,6 +34,9 @@ class CarlaEnv:
         bp = self.blueprint_library.filter('vehicle')[0]
         transform = self.map.get_spawn_points()[0]
         self.vehicle = self.world.try_spawn_actor(bp, transform) 
+        while(self.vehicle == None):
+            transform.location.x -= 1
+            self.vehicle = self.world.try_spawn_actor(bp, transform) 
         self.actor_list.append(self.vehicle)
 
     def add_sensor(self, sensor_name):
@@ -76,7 +79,7 @@ class CarlaEnv:
             self.reward = Config.INT_REWARD
             self.done = False
         
-        if distance > 2:
+        if distance > 1:
             self.reward += Config.INT_REWARD * (1/distance)
             self.done = False
         else:

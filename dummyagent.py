@@ -33,8 +33,7 @@ class DummyAgent(agent.Agent):
             blueprint_library = self.world.get_blueprint_library()
             bp = random.choice(blueprint_library.filter('vehicle'))
             transform = self.map.get_spawn_points()[0]
-            transform.location.x = -50
-            transform.location.y = 50
+            transform.location.x = -35
             
             self.vehicle = self.world.spawn_actor(bp, transform) 
             self.actor_list.append(self.vehicle)

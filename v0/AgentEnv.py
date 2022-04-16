@@ -1,9 +1,13 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 from spade import agent, quit_spade
 from spade.behaviour import CyclicBehaviour
 from tqdm import tqdm
 import time
 from termcolor import colored
 import Config
+import matplotlib.pyplot as plt
 import numpy as np
 import asyncio
 
@@ -18,6 +22,9 @@ class CarAgent(agent.Agent):
         def dqn_car(self):
             epsilon = Config.epsilon
             ep_rewards = [Config.MIN_REWARD]
+
+            xpoints = [x for x in range(1, Config.EPISODES + 1)]
+            ypoints = []
 
             for self.episode in tqdm(range(1, Config.EPISODES + 1)):
                 self.env.reset()
@@ -56,6 +63,7 @@ class CarAgent(agent.Agent):
                     step += 1
 
                     if self.done:
+                        ypoints.append(distance)
                         break
                 
                 ep_rewards.append(episode_reward)
@@ -73,10 +81,10 @@ class CarAgent(agent.Agent):
                     epsilon = max(Config.MIN_EPSILON, epsilon)
 
             print(colored('End and Save Model...', 'green'))
+            plt.plot(xpoints, ypoints)
+            plt.savefig('../test_images/graficas/v0.png')
 
             self.agent_dqn.save_rl_model()
-            
-            self.env.destroy_all_actors()
             self.episode = 0
             self.kill()
 
@@ -84,7 +92,7 @@ class CarAgent(agent.Agent):
             self.agent_dqn = DQNAgent()
             self.env = CarlaEnv()
 
-            self.goal_x = -36
+            self.goal_x = -50
             self.goal_y = 24
 
             self.current_state = self.env.front_camera
@@ -97,6 +105,7 @@ class CarAgent(agent.Agent):
         async def on_end(self):
             self.env.destroy_all_actors()
             print("Behaviour finished with exit code {}.".format(self.exit_code))
+            self.agent.stop()
     
     async def setup(self):
         self.my_behav = self.MyBehav()

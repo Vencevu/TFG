@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 import time
 
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 import Config
 import random
 import numpy as np
@@ -11,6 +14,7 @@ from keras.callbacks import TensorBoard
 from keras.applications.xception import Xception
 from keras.layers import Dense, GlobalAveragePooling2D, Flatten
 
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 class DQNAgent:
     def __init__(self):
