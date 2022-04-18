@@ -82,7 +82,7 @@ class CarAgent(agent.Agent):
 
             print(colored('End and Save Model...', 'green'))
             plt.plot(xpoints, ypoints)
-            plt.savefig('../test_images/graficas/v1.png')
+            plt.savefig('../test_images/graficas/v2.png')
 
             self.agent_dqn.save_rl_model()
             
@@ -94,8 +94,8 @@ class CarAgent(agent.Agent):
             self.agent_dqn = DQNAgent()
             self.env = CarlaEnv()
 
-            self.goal_x = 20
-            self.goal_y = 24
+            self.goal_x = -50
+            self.goal_y = 50
 
             self.current_state = self.env.front_camera
 
