@@ -82,6 +82,8 @@ class CarAgent(agent.Agent):
 
             print(colored('End and Save Model...', 'green'))
             plt.scatter(xpoints, ypoints)
+            plt.xlabel("Episodios")
+            plt.ylabel("Distancia al objetivo")
             plt.savefig('../test_images/graficas/v1.png')
 
             self.agent_dqn.save_rl_model()
