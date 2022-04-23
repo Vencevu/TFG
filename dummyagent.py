@@ -32,8 +32,8 @@ class DummyAgent(agent.Agent):
             #Creamos vehiculo
             blueprint_library = self.world.get_blueprint_library()
             bp = random.choice(blueprint_library.filter('vehicle'))
+            location = carla.Location(-50, 24, 0)
             transform = self.map.get_spawn_points()[0]
-            transform.location.x = -35
             
             self.vehicle = self.world.spawn_actor(bp, transform) 
             self.actor_list.append(self.vehicle)
@@ -58,7 +58,6 @@ class DummyAgent(agent.Agent):
             self.vehicle.apply_control(control)
 
             vehicle_loc = self.vehicle.get_location()
-            print("Posicion y ", vehicle_loc.y)
             vehicle_wp = self.map.get_waypoint(vehicle_loc)
             dist = self.next_wp.transform.location.distance(vehicle_loc)
             print("Distancia: ", dist)
