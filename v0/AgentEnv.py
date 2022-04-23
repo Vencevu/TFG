@@ -81,7 +81,7 @@ class CarAgent(agent.Agent):
                     epsilon = max(Config.MIN_EPSILON, epsilon)
 
             print(colored('End and Save Model...', 'green'))
-            plt.plot(xpoints, ypoints)
+            plt.scatter(xpoints, ypoints)
             plt.savefig('../test_images/graficas/v0.png')
 
             self.agent_dqn.save_rl_model()
