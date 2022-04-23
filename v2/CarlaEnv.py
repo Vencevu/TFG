@@ -77,6 +77,24 @@ class CarlaEnv:
             sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
             self.actor_list.append(sensor)
             sensor.listen(lambda data: self.process_col(data))
+        
+        if sensor_name == "lidar":
+            lidar_bp = self.blueprint_library.find('sensor.lidar.ray_cast')
+            lidar_bp.set_attribute('dropoff_general_rate', lidar_bp.get_attribute('dropoff_general_rate').recommended_values[0])
+            lidar_bp.set_attribute('dropoff_intensity_limit', lidar_bp.get_attribute('dropoff_intensity_limit').recommended_values[0])
+            lidar_bp.set_attribute('dropoff_zero_intensity', lidar_bp.get_attribute('dropoff_zero_intensity').recommended_values[0])
+            lidar_bp.set_attribute('channels',"64")
+            lidar_bp.set_attribute('points_per_second',"100000")
+            lidar_bp.set_attribute('rotation_frequency',"40")
+            lidar_bp.set_attribute('range',"50")
+
+            lidar_location = carla.Location(0,0,2)
+            lidar_rotation = carla.Rotation(0,0,0)
+            lidar_transform = carla.Transform(lidar_location,lidar_rotation)
+            lidar_sen = self.world.spawn_actor(lidar_bp,lidar_transform,attach_to=self.vehicle)
+
+            lidar_sen.listen(self.process_lidar)
+            self.actor_list.append(lidar_sen)
 
 
     def vehicle_velocity(self):
@@ -150,6 +168,9 @@ class CarlaEnv:
 
     def process_col(self, col):
         self.collision = col
+
+    def process_lidar(self, data):
+        pass
 
     def process_obs(self, obs):
         if obs != None:
