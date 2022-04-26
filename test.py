@@ -1,3 +1,4 @@
+from pydoc import describe
 from spade import agent, quit_spade
 from spade.behaviour import CyclicBehaviour
 import asyncio
@@ -25,7 +26,7 @@ class DummyAgent(agent.Agent):
             #Creamos vehiculo
             blueprint_library = self.world.get_blueprint_library()
             bp = random.choice(blueprint_library.filter('vehicle'))
-            transform = random.choice(self.world.get_map().get_spawn_points()) 
+            transform = self.world.get_map().get_spawn_points()[0]
             vehicle = self.world.spawn_actor(bp, transform) 
             self.actor_list.append(vehicle)
 
@@ -50,13 +51,14 @@ class DummyAgent(agent.Agent):
 
         async def run(self):
             await asyncio.sleep(1)
+            self.kill()
 
         async def on_end(self):
             self.client.apply_batch([carla.command.DestroyActor(x) for x in self.actor_list])
             print("Behaviour finished with exit code {}.".format(self.exit_code))
 
         def save_lidar(self, data):
-            print(len(data))
+            print(data[0].point)
 
     async def setup(self):
         self.my_behav = self.MyBehav()
@@ -65,12 +67,17 @@ class DummyAgent(agent.Agent):
 
 #Lanzamos el agente
 dummy = DummyAgent("agente@localhost", "1234")
-dummy.start()
+future = dummy.start()
+time.sleep(1)
+future.result()
 
-try:
-    while True:
+while dummy.is_alive():
+    try:
         time.sleep(1)
-except KeyboardInterrupt:
-    dummy.stop()
+    except KeyboardInterrupt:
+        dummy.stop()
+        break
+
+print("Agents finished")
 
 quit_spade()
