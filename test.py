@@ -32,13 +32,13 @@ class DummyAgent(agent.Agent):
 
             #Creamos sensor y lo acoplamos al vehiculo
             lidar_bp = blueprint_library.find('sensor.lidar.ray_cast')
-            lidar_bp.set_attribute('dropoff_general_rate', lidar_bp.get_attribute('dropoff_general_rate').recommended_values[0])
-            lidar_bp.set_attribute('dropoff_intensity_limit', lidar_bp.get_attribute('dropoff_intensity_limit').recommended_values[0])
-            lidar_bp.set_attribute('dropoff_zero_intensity', lidar_bp.get_attribute('dropoff_zero_intensity').recommended_values[0])
-            lidar_bp.set_attribute('channels',"64")
-            lidar_bp.set_attribute('points_per_second',"100000")
-            lidar_bp.set_attribute('rotation_frequency',"40")
-            lidar_bp.set_attribute('range',"50")
+            lidar_bp.set_attribute('noise_stddev', '0.2')
+            lidar_bp.set_attribute('upper_fov', str(15.0))
+            lidar_bp.set_attribute('lower_fov', str(25.0))
+            lidar_bp.set_attribute('channels', str(64))
+            lidar_bp.set_attribute('range', str(30))
+            lidar_bp.set_attribute('rotation_frequency', str(1.0 / 0.05))
+            lidar_bp.set_attribute('points_per_second', str(500000))
 
             lidar_location = carla.Location(0,0,2)
             lidar_rotation = carla.Rotation(0,0,0)
@@ -50,7 +50,7 @@ class DummyAgent(agent.Agent):
             self.actor_list.append(lidar_sen)
 
         async def run(self):
-            await asyncio.sleep(1)
+            await asyncio.sleep(5)
             self.kill()
 
         async def on_end(self):
@@ -58,7 +58,7 @@ class DummyAgent(agent.Agent):
             print("Behaviour finished with exit code {}.".format(self.exit_code))
 
         def save_lidar(self, data):
-            print(data[0].point)
+            data.save_to_disk('test_images/lidar/%.6d.ply' % data.frame)
 
     async def setup(self):
         self.my_behav = self.MyBehav()
