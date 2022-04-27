@@ -25,24 +25,22 @@ class DummyAgent(agent.Agent):
 
             #Creamos vehiculo
             blueprint_library = self.world.get_blueprint_library()
-            bp = random.choice(blueprint_library.filter('vehicle'))
+            bp = blueprint_library.filter('vehicle')[0]
             transform = self.world.get_map().get_spawn_points()[0]
             vehicle = self.world.spawn_actor(bp, transform) 
             self.actor_list.append(vehicle)
 
             #Creamos sensor y lo acoplamos al vehiculo
             lidar_bp = blueprint_library.find('sensor.lidar.ray_cast')
-            lidar_bp.set_attribute('noise_stddev', '0.2')
-            lidar_bp.set_attribute('upper_fov', str(15.0))
-            lidar_bp.set_attribute('lower_fov', str(25.0))
+            lidar_bp.set_attribute('upper_fov', str(15))
+            lidar_bp.set_attribute('lower_fov', str(-25))
             lidar_bp.set_attribute('channels', str(64))
             lidar_bp.set_attribute('range', str(30))
-            lidar_bp.set_attribute('rotation_frequency', str(1.0 / 0.05))
+            lidar_bp.set_attribute('rotation_frequency', str(20))
             lidar_bp.set_attribute('points_per_second', str(500000))
 
-            lidar_location = carla.Location(0,0,2)
-            lidar_rotation = carla.Rotation(0,0,0)
-            lidar_transform = carla.Transform(lidar_location,lidar_rotation)
+            lidar_location = carla.Location(0, 0, 1.5)
+            lidar_transform = carla.Transform(lidar_location)
             lidar_sen = self.world.spawn_actor(lidar_bp,lidar_transform,attach_to=vehicle)
 
             lidar_sen.listen(self.save_lidar)
