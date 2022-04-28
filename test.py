@@ -33,7 +33,8 @@ class DummyAgent(agent.Agent):
             #Creamos sensor y lo acoplamos al vehiculo
             lidar_bp = blueprint_library.find('sensor.lidar.ray_cast')
             lidar_bp.set_attribute('upper_fov', str(15))
-            lidar_bp.set_attribute('lower_fov', str(-25))
+            lidar_bp.set_attribute('lower_fov', str(-30))
+            lidar_bp.set_attribute('horizontal_fov', str(180.0))
             lidar_bp.set_attribute('channels', str(64))
             lidar_bp.set_attribute('range', str(30))
             lidar_bp.set_attribute('rotation_frequency', str(20))
@@ -56,7 +57,9 @@ class DummyAgent(agent.Agent):
             print("Behaviour finished with exit code {}.".format(self.exit_code))
 
         def save_lidar(self, data):
-            data.save_to_disk('test_images/lidar/%.6d.ply' % data.frame)
+            for p in data:
+                if p.point.y == 0:
+                    print(":v")
 
     async def setup(self):
         self.my_behav = self.MyBehav()

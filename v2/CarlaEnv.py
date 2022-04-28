@@ -112,10 +112,13 @@ class CarlaEnv:
         b = (goal_pose_y - pose_y)
         return math.sqrt(pow((a), 2) + pow((b), 2))
 
-    def ditance_to_3D(self, x, y, z):
+    def distance_to_3D(self, x, y, z):
         vehicle_x = self.vehicle.get_location().x
         vehicle_y = self.vehicle.get_location().y
         vehicle_z = self.vehicle.get_location().z
+
+        dist = math.sqrt(pow(vehicle_x - x, 2) + pow(vehicle_y - y, 2) + pow(vehicle_z - z, 2))
+        return dist
 
     def step(self, action, distance):
         self.done = False
@@ -150,14 +153,19 @@ class CarlaEnv:
             self.reward += Config.MIN_REWARD / self.distance_to_obstacle
             self.distance_to_obstacle = 0
         
+        # Penalizacion por aproximacion a obstaculo (LIDAR)
         if self.lidar_data != None:
             # Impedimos que la variable que contiene los datos del lidar se modifique
             self.getting_data = True
             # Miramos datos del lidar
             for det in self.lidar_data:
-                x = det.point.x
-                y = det.point.y
-                z = det.point.z
+                x, y, z = det.point.x, det.point.y, det.point.z
+                d = self.distance_to_3D(x, y, z)
+                if d < 5 and y > 0:
+                    self.reward = Config.MIN_REWARD / d
+                    self.done = True
+
+            self.lidar_data = None
             self.getting_data = False
 
         # Reinicio por colision
