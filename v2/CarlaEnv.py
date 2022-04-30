@@ -82,17 +82,16 @@ class CarlaEnv:
         
         if sensor_name == "lidar":
             lidar_bp = self.blueprint_library.find('sensor.lidar.ray_cast')
-            lidar_bp.set_attribute('dropoff_general_rate', lidar_bp.get_attribute('dropoff_general_rate').recommended_values[0])
-            lidar_bp.set_attribute('dropoff_intensity_limit', lidar_bp.get_attribute('dropoff_intensity_limit').recommended_values[0])
-            lidar_bp.set_attribute('dropoff_zero_intensity', lidar_bp.get_attribute('dropoff_zero_intensity').recommended_values[0])
-            lidar_bp.set_attribute('channels',"64")
-            lidar_bp.set_attribute('points_per_second',"100000")
-            lidar_bp.set_attribute('rotation_frequency',"40")
-            lidar_bp.set_attribute('range',"50")
+            lidar_bp.set_attribute('upper_fov', str(15))
+            lidar_bp.set_attribute('lower_fov', str(-30))
+            lidar_bp.set_attribute('horizontal_fov', str(180.0))
+            lidar_bp.set_attribute('channels', str(64))
+            lidar_bp.set_attribute('range', str(30))
+            lidar_bp.set_attribute('rotation_frequency', str(20))
+            lidar_bp.set_attribute('points_per_second', str(500000))
 
-            lidar_location = carla.Location(0,0,2)
-            lidar_rotation = carla.Rotation(0,0,0)
-            lidar_transform = carla.Transform(lidar_location,lidar_rotation)
+            lidar_location = carla.Location(0,0,1.5)
+            lidar_transform = carla.Transform(lidar_location)
             lidar_sen = self.world.spawn_actor(lidar_bp,lidar_transform,attach_to=self.vehicle)
 
             lidar_sen.listen(self.process_lidar)
@@ -160,10 +159,11 @@ class CarlaEnv:
             # Miramos datos del lidar
             for det in self.lidar_data:
                 x, y, z = det.point.x, det.point.y, det.point.z
-                d = self.distance_to_3D(x, y, z)
-                if d < 5 and y > 0:
-                    self.reward = Config.MIN_REWARD / d
-                    self.done = True
+                if z > 0:
+                    d = self.distance_to_3D(x, y, z)
+                    if d < 5 and y > 0:
+                        self.reward = Config.MIN_REWARD / d
+                        self.done = True
 
             self.lidar_data = None
             self.getting_data = False
