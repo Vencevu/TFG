@@ -155,7 +155,8 @@ class CarlaEnv:
             # Miramos datos del lidar
             for det in self.lidar_data:
                 x, y, z = det.point.x, det.point.y, det.point.z
-                if z > -1.5:
+                # Las detecciones del lidar son relativas al sensor -> comparamos con la altura del sensor para ignorar el suelo
+                if z > -1.4:
                     d = self.distance_to_detecion(x, y, z)
                     if d < 5:
                         self.reward = Config.MIN_REWARD / d

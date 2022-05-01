@@ -58,9 +58,7 @@ class DummyAgent(agent.Agent):
 
         def save_lidar(self, data):
             #data.save_to_disk('test_images/lidar/%.6d.ply' % data.frame)
-            for p in data:
-                if p.point.z < -2:
-                    print(p.point)    
+            pass
 
     async def setup(self):
         self.my_behav = self.MyBehav()
