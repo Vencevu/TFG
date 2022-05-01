@@ -14,6 +14,7 @@ class DummyAgent(agent.Agent):
         actor_list = []
         world = None
         client = None
+        cont = 0
 
         async def on_start(self):
             #Conexion con CARLA
@@ -32,11 +33,10 @@ class DummyAgent(agent.Agent):
 
             #Creamos sensor y lo acoplamos al vehiculo
             lidar_bp = blueprint_library.find('sensor.lidar.ray_cast')
-            lidar_bp.set_attribute('upper_fov', str(20))
-            lidar_bp.set_attribute('lower_fov', str(-30))
+            lidar_bp.set_attribute('upper_fov', str(0))
             lidar_bp.set_attribute('horizontal_fov', str(180.0))
             lidar_bp.set_attribute('channels', str(64))
-            lidar_bp.set_attribute('range', str(20))
+            lidar_bp.set_attribute('range', str(5))
             lidar_bp.set_attribute('rotation_frequency', str(20))
             lidar_bp.set_attribute('points_per_second', str(100000))
 
@@ -57,9 +57,12 @@ class DummyAgent(agent.Agent):
             print("Behaviour finished with exit code {}.".format(self.exit_code))
 
         def save_lidar(self, data):
-            print(data.raw_data[0])
-            print("*************************")
-            #data.save_to_disk('test_images/lidar/%.6d.ply' % data.frame)
+            for d in data:
+                p = d.point
+                if p.z > -1:
+                    self.cont += 1
+            print(self.cont)
+            data.save_to_disk('test_images/lidar/%.6d.ply' % data.frame)
 
     async def setup(self):
         self.my_behav = self.MyBehav()
