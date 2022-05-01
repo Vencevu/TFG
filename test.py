@@ -27,18 +27,18 @@ class DummyAgent(agent.Agent):
             blueprint_library = self.world.get_blueprint_library()
             bp = blueprint_library.filter('vehicle')[0]
             transform = self.world.get_map().get_spawn_points()[0]
-            vehicle = self.world.spawn_actor(bp, transform) 
+            vehicle = self.world.spawn_actor(bp, transform)
             self.actor_list.append(vehicle)
 
             #Creamos sensor y lo acoplamos al vehiculo
             lidar_bp = blueprint_library.find('sensor.lidar.ray_cast')
-            lidar_bp.set_attribute('upper_fov', str(15))
+            lidar_bp.set_attribute('upper_fov', str(20))
             lidar_bp.set_attribute('lower_fov', str(-30))
             lidar_bp.set_attribute('horizontal_fov', str(180.0))
             lidar_bp.set_attribute('channels', str(64))
-            lidar_bp.set_attribute('range', str(30))
+            lidar_bp.set_attribute('range', str(20))
             lidar_bp.set_attribute('rotation_frequency', str(20))
-            lidar_bp.set_attribute('points_per_second', str(500000))
+            lidar_bp.set_attribute('points_per_second', str(100000))
 
             lidar_location = carla.Location(0, 0, 1.5)
             lidar_transform = carla.Transform(lidar_location)
@@ -57,9 +57,10 @@ class DummyAgent(agent.Agent):
             print("Behaviour finished with exit code {}.".format(self.exit_code))
 
         def save_lidar(self, data):
+            #data.save_to_disk('test_images/lidar/%.6d.ply' % data.frame)
             for p in data:
-                if p.point.y == 0:
-                    print(":v")
+                if p.point.z < -2:
+                    print(p.point)    
 
     async def setup(self):
         self.my_behav = self.MyBehav()

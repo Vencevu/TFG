@@ -90,7 +90,7 @@ class CarlaEnv:
             lidar_bp.set_attribute('rotation_frequency', str(20))
             lidar_bp.set_attribute('points_per_second', str(500000))
 
-            lidar_location = carla.Location(0,0,1.5)
+            lidar_location = carla.Location(0, 0, 1.5)
             lidar_transform = carla.Transform(lidar_location)
             lidar_sen = self.world.spawn_actor(lidar_bp,lidar_transform,attach_to=self.vehicle)
 
@@ -111,12 +111,8 @@ class CarlaEnv:
         b = (goal_pose_y - pose_y)
         return math.sqrt(pow((a), 2) + pow((b), 2))
 
-    def distance_to_3D(self, x, y, z):
-        vehicle_x = self.vehicle.get_location().x
-        vehicle_y = self.vehicle.get_location().y
-        vehicle_z = self.vehicle.get_location().z
-
-        dist = math.sqrt(pow(vehicle_x - x, 2) + pow(vehicle_y - y, 2) + pow(vehicle_z - z, 2))
+    def distance_to_detecion(self, x, y, z):
+        dist = math.sqrt(pow(0 - x, 2) + pow(0 - y, 2) + pow(0 - z, 2))
         return dist
 
     def step(self, action, distance):
@@ -159,9 +155,9 @@ class CarlaEnv:
             # Miramos datos del lidar
             for det in self.lidar_data:
                 x, y, z = det.point.x, det.point.y, det.point.z
-                if z > 0:
-                    d = self.distance_to_3D(x, y, z)
-                    if d < 5 and y > 0:
+                if z > -1.5:
+                    d = self.distance_to_detecion(x, y, z)
+                    if d < 5:
                         self.reward = Config.MIN_REWARD / d
                         self.done = True
 
