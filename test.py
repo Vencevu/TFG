@@ -57,8 +57,9 @@ class DummyAgent(agent.Agent):
             print("Behaviour finished with exit code {}.".format(self.exit_code))
 
         def save_lidar(self, data):
+            print(data.raw_data[0])
+            print("*************************")
             #data.save_to_disk('test_images/lidar/%.6d.ply' % data.frame)
-            pass
 
     async def setup(self):
         self.my_behav = self.MyBehav()

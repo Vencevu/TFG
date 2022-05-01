@@ -111,7 +111,7 @@ class CarlaEnv:
         b = (goal_pose_y - pose_y)
         return math.sqrt(pow((a), 2) + pow((b), 2))
 
-    def distance_to_detecion(self, x, y, z):
+    def distance_to_detection(self, x, y, z):
         dist = math.sqrt(pow(0 - x, 2) + pow(0 - y, 2) + pow(0 - z, 2))
         return dist
 
@@ -157,7 +157,7 @@ class CarlaEnv:
                 x, y, z = det.point.x, det.point.y, det.point.z
                 # Las detecciones del lidar son relativas al sensor -> comparamos con la altura del sensor para ignorar el suelo
                 if z > -1:
-                    d = self.distance_to_detecion(x, y, z)
+                    d = self.distance_to_detection(x, y, z)
                     if d < 5:
                         self.reward = Config.MIN_REWARD / d
                         self.done = True
