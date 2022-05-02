@@ -115,7 +115,7 @@ class CarlaEnv:
         return math.sqrt(pow((a), 2) + pow((b), 2))
 
     def distance_to_detection(self, x, y, z):
-        dist = math.sqrt(pow(0 - x, 2) + pow(0 - y, 2) + pow(0 - z, 2))
+        dist = math.sqrt(pow(0 - x, 2) + pow(0 - y, 2) + pow(-1 - z, 2))
         return dist
 
     def step(self, action, distance):
