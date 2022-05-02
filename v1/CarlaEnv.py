@@ -61,19 +61,19 @@ class CarlaEnv:
             bp = self.blueprint_library.find('sensor.other.obstacle')
             bp.set_attribute('sensor_tick', '1.0')
 
-            transform = carla.Transform(carla.Location(x = 0.8, y = -0.5, z = 1))
+            transform = carla.Transform(carla.Location(x = 0.8, y = -0.5, z = 0.5))
             sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
             self.actor_list.append(sensor)
             sensor.listen(lambda data: self.process_obs(data))
 
-            transform = carla.Transform(carla.Location(x = 0.8, y = 0.5, z = 1))
+            transform = carla.Transform(carla.Location(x = 0.8, y = 0.5, z = 0.5))
             sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
             self.actor_list.append(sensor)
             sensor.listen(lambda data: self.process_obs(data))
         
         if sensor_name == "col_det":
             bp = self.blueprint_library.find('sensor.other.collision')
-            transform = carla.Transform(carla.Location(z=1))
+            transform = carla.Transform(carla.Location(z=0.5))
             sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
             self.actor_list.append(sensor)
             sensor.listen(lambda data: self.process_col(data))
