@@ -24,9 +24,9 @@ class DummyAgent(agent.Agent):
 
             #Creamos vehiculo
             blueprint_library = self.world.get_blueprint_library()
-            bp = random.choice(blueprint_library.filter('vehicle'))
-            transform = random.choice(self.world.get_map().get_spawn_points()) 
-            vehicle = self.world.spawn_actor(bp, transform) 
+            bp = blueprint_library.filter('vehicle')[0]
+            transform = self.world.get_map().get_spawn_points()[0]
+            vehicle = self.world.try_spawn_actor(bp, transform) 
             self.actor_list.append(vehicle)
 
             #Creamos sensor y lo acoplamos al vehiculo
@@ -39,11 +39,10 @@ class DummyAgent(agent.Agent):
             lidar_bp.set_attribute('rotation_frequency',"40")
             lidar_bp.set_attribute('range',"50")
 
-            lidar_location = carla.Location(0,0,2)
-            lidar_rotation = carla.Rotation(0,0,0)
-            lidar_transform = carla.Transform(lidar_location,lidar_rotation)
-            lidar_sen = self.world.spawn_actor(lidar_bp,lidar_transform,attach_to=vehicle)
-
+            lidar_location = carla.Location(0,0,1.5)
+            lidar_transform = carla.Transform(lidar_location)
+            lidar_sen = self.world.try_spawn_actor(lidar_bp,lidar_transform,attach_to=vehicle)
+            time.sleep(1)
             lidar_sen.listen(self.save_lidar)
 
             self.actor_list.append(lidar_sen)
@@ -71,6 +70,8 @@ try:
     while True:
         time.sleep(1)
 except KeyboardInterrupt:
-    dummy.stop()
+    dummy.my_behav.kill()
+    time.sleep(2)
 
+dummy.stop()
 quit_spade()
