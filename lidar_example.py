@@ -39,7 +39,7 @@ class DummyAgent(agent.Agent):
             lidar_bp.set_attribute('rotation_frequency',"40")
             lidar_bp.set_attribute('range',"50")
 
-            lidar_location = carla.Location(0,0,1.5)
+            lidar_location = carla.Location(0,0,2)
             lidar_transform = carla.Transform(lidar_location)
             lidar_sen = self.world.try_spawn_actor(lidar_bp,lidar_transform,attach_to=vehicle)
             time.sleep(1)
