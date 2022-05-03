@@ -152,21 +152,10 @@ class CarlaEnv:
             self.distance_to_obstacle = 0
         
         # Penalizacion por aproximacion a obstaculo (LIDAR)
-        if self.lidar_data != None:
-            # Impedimos que la variable que contiene los datos del lidar se modifique
-            self.getting_data = True
-            # Miramos datos del lidar
-            for det in self.lidar_data:
-                x, y, z = det.point.x, det.point.y, det.point.z
-                # Las detecciones del lidar son relativas al sensor -> comparamos con la altura del sensor para ignorar el suelo
-                if z > -1:
-                    d = self.distance_to_detection(x, y, z)
-                    if d < 5:
-                        self.reward = Config.MIN_REWARD / d
-                        self.done = True
-
-            self.lidar_data = None
-            self.getting_data = False
+        if self.obj_prox > 0:
+            self.reward = Config.MIN_REWARD / self.obj_prox
+            self.done = True
+            self.obj_prox = 0
 
         # Reinicio por colision
         if self.collision != None:
@@ -194,9 +183,24 @@ class CarlaEnv:
     def process_col(self, col):
         self.collision = col
 
-    def process_lidar(self, data):
-        if not self.getting_data:
-            self.lidar_data = data
+    def process_lidar(self, point_cloud):
+        data = np.copy(np.frombuffer(point_cloud.raw_data, dtype=np.dtype('f4')))
+        data = np.reshape(data, (int(data.shape[0] / 4), 4))
+        # Isolate the 3D data
+        points = data[:, :-1]
+        # Eliminamos puntos pertenecientes al suelo y al propio coche
+        points = points[points[:, 2] > -1, :]
+        points = points[np.sqrt(points[:, 0]**2 + points[:, 1]**2) > 2, :]
+        # Calculamos vector de distancias
+        X = points[:, 0]
+        Y = points[:, 1]
+        Z = points[:, 2]
+        D = np.sqrt(X**2 + Y**2 + Z**2)
+        # Nos quedamos con distancias menores a 5 metros
+        D = D[D[:] < 5]
+
+        if D.shape[0] > 0:
+            self.obj_prox = np.amin(D)
 
     def process_obs(self, obs):
         if obs != None:
