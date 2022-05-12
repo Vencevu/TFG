@@ -113,7 +113,7 @@ class CarlaEnv:
         
         # Recompensa en funcion de cuanto se acerca al objetivo
         if distance > 1:
-            self.reward += Config.INT_REWARD * (1/distance)
+            self.reward += Config.INT_REWARD / distance
         else:
             self.reward += Config.MAX_REWARD
             self.done = True
