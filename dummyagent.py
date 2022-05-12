@@ -2,6 +2,7 @@ import carla
 import asyncio
 import random
 import time
+from cv2 import transform
 from spade import agent, quit_spade
 from spade.behaviour import CyclicBehaviour
 from agents.navigation.controller import VehiclePIDController
@@ -32,9 +33,12 @@ class DummyAgent(agent.Agent):
             #Creamos vehiculo
             blueprint_library = self.world.get_blueprint_library()
             bp = random.choice(blueprint_library.filter('vehicle'))
-            location = carla.Location(-50, 24, 0)
-            transform = self.map.get_spawn_points()[0]
-            
+            transform = carla.Transform(carla.Location(-74, 25, 0.6))
+
+            transform2 = carla.Transform(carla.Location(0, 25, 0.6))
+            vehicle2 = self.world.spawn_actor(bp, transform2) 
+            self.actor_list.append(vehicle2)
+
             self.vehicle = self.world.spawn_actor(bp, transform) 
             self.actor_list.append(self.vehicle)
             

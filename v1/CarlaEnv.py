@@ -36,9 +36,8 @@ class CarlaEnv:
 
     def gen_vehicle(self):
         bp = self.blueprint_library.filter('vehicle')[0]
-        transform = self.map.get_spawn_points()[0]
-        transform.location.x -= 10
-        self.vehicle = self.world.try_spawn_actor(bp, transform) 
+        transform = carla.Transform(carla.Location(-74, 25, 0.6))
+        self.vehicle = self.world.try_spawn_actor(bp, transform)
         while(self.vehicle == None):
             transform.location.x -= 1
             self.vehicle = self.world.try_spawn_actor(bp, transform) 
