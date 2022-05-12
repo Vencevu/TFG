@@ -91,35 +91,6 @@ class CarAgent(agent.Agent):
             self.env.destroy_all_actors()
             self.episode = 0
 
-            # Convert the model
-            converter = tf.lite.TFLiteConverter.from_saved_model('models/RLModel')  # path to the SavedModel directory
-            tflite_model = converter.convert()
-
-            # Save the model.
-            with open('models/model.tflite', 'wb') as f:
-                f.write(tflite_model)
-
-            try:
-                # Load the model
-                # Create a new model instance
-                model = self.agent_dqn.create_model()
-                # Restore the weights
-                model.load_weights('models/W_RLModel/')
-                model.sumary()
-            except:
-                print("Error W_RLModel")
-
-            try:
-                # Restore the weights
-                # model.load_weights('models/RLModel/')
-                from tensorflow import keras
-                model = keras.models.load_model('models/RLModel')
-                # model = tf.keras.models.load_model('models/RLModel/')
-                model.sumary()
-                model.predict(np.ones((1, Config.IM_HEIGHT, Config.IM_WIDTH, 3)))
-            except:
-                print("Error RLModel")
-
             self.kill()
 
         async def on_start(self):
