@@ -25,6 +25,7 @@ class CarlaEnv:
 
     def reset(self):
         self.destroy_all_actors()
+        self.collision = None
         self.gen_vehicle()
         self.add_sensor("rgb_cam")
         self.add_sensor("obs_det")
@@ -36,7 +37,7 @@ class CarlaEnv:
 
     def gen_vehicle(self):
         bp = self.blueprint_library.filter('vehicle')[0]
-        transform = carla.Transform(carla.Location(-74, 25, 0.6))
+        transform = carla.Transform(carla.Location(-35, 25, 0.6))
         self.vehicle = self.world.try_spawn_actor(bp, transform)
         while(self.vehicle == None):
             transform.location.x -= 1
@@ -126,7 +127,6 @@ class CarlaEnv:
 
         # Reinicio por colision
         if self.collision != None:
-            self.collision = None
             self.done = True
             self.reward = Config.MIN_REWARD * 3
             print("Collision-Reset...")
@@ -148,7 +148,8 @@ class CarlaEnv:
         self.front_camera = i3
 
     def process_col(self, col):
-        self.collision = col
+        if self.collision is None:
+            self.collision = col
 
     def process_obs(self, obs):
         if obs != None:

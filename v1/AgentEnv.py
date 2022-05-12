@@ -1,3 +1,4 @@
+from distutils.command.config import config
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -10,6 +11,7 @@ import Config
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
+import asyncio
 
 from CarlaEnv import CarlaEnv
 from DQNEnv import DQNAgent
@@ -84,7 +86,7 @@ class CarAgent(agent.Agent):
             plt.scatter(xpoints, ypoints)
             plt.xlabel("Episodios")
             plt.ylabel("Distancia al objetivo")
-            plt.savefig('../test_images/graficas/v1.png')
+            plt.savefig('../test_images/graficas/v1_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
 
             self.agent_dqn.save_rl_model()
             
@@ -97,7 +99,7 @@ class CarAgent(agent.Agent):
             self.agent_dqn = DQNAgent()
             self.env = CarlaEnv()
 
-            self.goal_x = 0
+            self.goal_x = 20
             self.goal_y = 25
 
             self.current_state = self.env.front_camera

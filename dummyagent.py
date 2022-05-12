@@ -32,10 +32,10 @@ class DummyAgent(agent.Agent):
 
             #Creamos vehiculo
             blueprint_library = self.world.get_blueprint_library()
-            bp = random.choice(blueprint_library.filter('vehicle'))
-            transform = carla.Transform(carla.Location(-74, 25, 0.6))
+            bp = blueprint_library.filter('vehicle')[0]
+            transform = carla.Transform(carla.Location(-35, 25, 0.6))
 
-            transform2 = carla.Transform(carla.Location(0, 25, 0.6))
+            transform2 = carla.Transform(carla.Location(25, 25, 0.6))
             vehicle2 = self.world.spawn_actor(bp, transform2) 
             self.actor_list.append(vehicle2)
 
