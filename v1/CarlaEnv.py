@@ -51,7 +51,7 @@ class CarlaEnv:
             bp.set_attribute('image_size_y', str(Config.IM_HEIGHT))
             bp.set_attribute('fov', '110')
             bp.set_attribute('sensor_tick', '1.0')
-            transform = carla.Transform(carla.Location(x=0.8, z=1.7))
+            transform = carla.Transform(carla.Location(x=0.8, z=1.5))
             sensor = self.world.try_spawn_actor(bp, transform, attach_to=self.vehicle)
             self.actor_list.append(sensor)
             sensor.listen(lambda data: self.process_img(data))
