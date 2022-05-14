@@ -194,8 +194,8 @@ class CarlaEnv:
         X = points[:, 0]
         Y = points[:, 1]
         Z = points[:, 2]
-        D = np.sqrt(X**2 + Y**2 + (-1 - Z)**2)
-        # Nos quedamos con distancias menores a 5 metros
+        D = np.sqrt(X**2 + Y**2 + (Z + 1)**2)
+        # Nos quedamos con distancias menores a 4 metros
         D = D[D[:] < 4]
 
         if D.shape[0] > 0:
