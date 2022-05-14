@@ -131,6 +131,6 @@ while not dummy.my_behav.is_killed():
         dummy.stop()
         break
 
-print("Agents finished")
+print("Agent %s finished", (dummy.name))
 
 quit_spade()
