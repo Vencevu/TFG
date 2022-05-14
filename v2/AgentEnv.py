@@ -9,7 +9,6 @@ from termcolor import colored
 import Config
 import numpy as np
 import matplotlib.pyplot as plt
-import asyncio
 
 from CarlaEnv import CarlaEnv
 from DQNEnv import DQNAgent
