@@ -12,6 +12,7 @@ class CarlaEnv:
     lidar_data = None
     getting_data = False
     vehicle = None
+    obj_prox = 0
     distance_to_obstacle = 0
 
     def __init__(self):
@@ -38,8 +39,7 @@ class CarlaEnv:
 
     def gen_vehicle(self):
         bp = self.blueprint_library.filter('vehicle')[0]
-        transform = self.map.get_spawn_points()[0]
-        transform.location.x -= 10
+        transform = carla.Transform(carla.Location(Config.START_X, Config.START_Y, 0.6))
         self.vehicle = self.world.try_spawn_actor(bp, transform) 
         while(self.vehicle == None):
             transform.location.x -= 1
@@ -154,7 +154,6 @@ class CarlaEnv:
         # Penalizacion por aproximacion a obstaculo (LIDAR)
         if self.obj_prox > 0:
             self.reward = Config.MIN_REWARD / self.obj_prox
-            self.done = True
             self.obj_prox = 0
 
         # Reinicio por colision

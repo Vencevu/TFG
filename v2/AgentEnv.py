@@ -96,8 +96,8 @@ class CarAgent(agent.Agent):
             self.agent_dqn = DQNAgent()
             self.env = CarlaEnv()
 
-            self.goal_x = 20
-            self.goal_y = 24
+            self.goal_x = Config.GOAL_X
+            self.goal_y = Config.GOAL_Y
 
             self.current_state = self.env.front_camera
 
@@ -121,7 +121,7 @@ future = dummy.start()
 time.sleep(1)
 future.result()
 
-while dummy.is_alive():
+while not dummy.my_behav.is_killed():
     try:
         time.sleep(1)
     except KeyboardInterrupt:
