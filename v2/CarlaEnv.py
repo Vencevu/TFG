@@ -29,8 +29,10 @@ class CarlaEnv:
     def reset(self):
         self.destroy_all_actors()
         self.gen_vehicle()
+        time.sleep(0.5)
         self.add_sensor("rgb_cam")
         self.add_sensor("obs_det")
+        self.collision = None
         self.add_sensor("col_det")
         self.episode_start = time.time()
 
@@ -159,8 +161,6 @@ class CarlaEnv:
 
         # Reinicio por colision
         if self.collision != None:
-            self.collision = None
-            self.done = True
             self.reward = Config.MIN_REWARD * 3
             print("Collision-Reset...")
             
@@ -181,7 +181,8 @@ class CarlaEnv:
         self.front_camera = i3
 
     def process_col(self, col):
-        self.collision = col
+        if self.collision is None:
+            self.collision = col
 
     def process_lidar(self, point_cloud):
         data = np.copy(np.frombuffer(point_cloud.raw_data, dtype=np.dtype('f4')))
