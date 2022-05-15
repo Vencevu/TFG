@@ -91,8 +91,7 @@ class CarAgent(agent.Agent):
             self.env.destroy_all_actors()
             self.episode = 0
 
-            raise KeyboardInterrupt
-
+            self.kill()
         async def on_start(self):
             self.agent_dqn = DQNAgent()
             self.env = CarlaEnv()
@@ -117,7 +116,7 @@ class CarAgent(agent.Agent):
 
 
 #Lanzamos el agente
-dummy = CarAgent("agente@localhost", "1234")
+dummy = CarAgent("agente3@localhost", "1234")
 future = dummy.start()
 time.sleep(1)
 future.result()
@@ -129,6 +128,6 @@ while not dummy.my_behav.is_killed():
         dummy.stop()
         break
 
-print("Agent %s finished", (dummy.name))
+print("Agent %s finished" % dummy.name)
 
 quit_spade()
