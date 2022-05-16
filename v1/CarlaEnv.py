@@ -3,6 +3,7 @@ import carla
 import math
 import time
 import numpy as np
+from termcolor import colored
 import Config
 
 class CarlaEnv:
@@ -120,7 +121,7 @@ class CarlaEnv:
         else:
             self.reward += Config.MAX_REWARD
             self.done = True
-            print("Objetivo alcanzado")
+            print(colored("Objetivo alcanzado", 'yellow'))
 
         # Penalizacion por aproximacion a obstaculo
         if self.distance_to_obstacle > 0:
@@ -139,7 +140,6 @@ class CarlaEnv:
             self.done = True
             self.reward += Config.MIN_REWARD
             print("Time-Reset...")
-            print("Distancia a objetivo: ", distance)
         
         return self.front_camera, vel, self.reward, self.done, None
 

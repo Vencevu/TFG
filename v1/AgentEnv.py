@@ -92,6 +92,7 @@ class CarAgent(agent.Agent):
             self.episode = 0
 
             self.kill()
+            
         async def on_start(self):
             self.agent_dqn = DQNAgent()
             self.env = CarlaEnv()
@@ -118,7 +119,6 @@ class CarAgent(agent.Agent):
 #Lanzamos el agente
 dummy = CarAgent("agente3@localhost", "1234")
 future = dummy.start()
-time.sleep(1)
 future.result()
 
 while not dummy.my_behav.is_killed():
