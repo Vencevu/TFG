@@ -11,6 +11,7 @@ import random
 import numpy as np
 import tensorflow as tf
 from collections import deque
+import matplotlib.pyplot as plt
 from keras.models import Model
 from keras.callbacks import TensorBoard
 from keras.applications.xception import Xception
@@ -158,9 +159,22 @@ class DQNAgent:
         ## setting the tensorboard callback, only if log_this_step is true. If it's false, then we'll still fit, we just wont log to TensorBoard.
         with self.graph.as_default():
             tf.compat.v1.keras.backend.set_session(self.sess)
-            self.model.fit(np.array(X) / 255, np.array(y), batch_size=Config.TRAINING_BATCH_SIZE, verbose=0,
-                           shuffle=False,
-                           callbacks=[self.tensorboard] if log_this_step else None)
+            history = self.model.fit(np.array(X) / 255, np.array(y), batch_size=Config.TRAINING_BATCH_SIZE, verbose=0,
+                           shuffle=False)
+            print(history.history.keys())
+            plt.plot(history.history['accuracy'])
+            plt.title('model accuracy')
+            plt.ylabel('accuracy')
+            plt.xlabel('epoch')
+            plt.legend(['train', 'test'], loc='upper left')
+            plt.savefig('../graficas/v1/Acc_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+
+            plt.plot(history.history['loss'])
+            plt.title('model loss')
+            plt.ylabel('loss')
+            plt.xlabel('epoch')
+            plt.legend(['train', 'test'], loc='upper left')
+            plt.savefig('../graficas/v1/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
 
         ## updating to determine if we want to update target_model
         if log_this_step:
@@ -171,6 +185,7 @@ class DQNAgent:
             self.target_model.set_weights(self.model.get_weights())
             self.target_update_counter = 0
 
+    
     def get_qs(self, state):
         with self.graph.as_default():
             tf.compat.v1.keras.backend.set_session(self.sess)

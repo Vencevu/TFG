@@ -59,7 +59,7 @@ class CarAgent(agent.Agent):
                     episode_reward += reward
                     self.current_state = new_state
                     self.agent_dqn.update_replay_memory((self.current_state, action, reward, new_state, self.done))
-
+                    
                     step += 1
 
                     if self.done:
@@ -79,16 +79,20 @@ class CarAgent(agent.Agent):
                 if epsilon > Config.MIN_EPSILON:
                     epsilon *= Config.EPSILON_DECAY
                     epsilon = max(Config.MIN_EPSILON, epsilon)
+                
+                
 
             print(colored('End and Save Model...', 'green'))
             plt.scatter(xpoints, ypoints)
             plt.xlabel("Episodios")
             plt.ylabel("Distancia al objetivo")
-            plt.savefig('../test_images/graficas/v1_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            plt.savefig('../graficas/v1/%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
 
+            
             self.agent_dqn.save_rl_model()
             
             self.env.destroy_all_actors()
+            self.agent_dqn.train()
             self.episode = 0
 
             self.kill()
@@ -108,7 +112,6 @@ class CarAgent(agent.Agent):
             self.dqn_car()
 
         async def on_end(self):
-            self.env.destroy_all_actors()
             print("Behaviour finished with exit code {}.".format(self.exit_code))
     
     async def setup(self):
@@ -117,7 +120,7 @@ class CarAgent(agent.Agent):
 
 
 #Lanzamos el agente
-dummy = CarAgent("agente3@localhost", "1234")
+dummy = CarAgent("agente@localhost", "1234")
 future = dummy.start()
 future.result()
 
