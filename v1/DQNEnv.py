@@ -161,7 +161,6 @@ class DQNAgent:
             tf.compat.v1.keras.backend.set_session(self.sess)
             history = self.model.fit(np.array(X) / 255, np.array(y), batch_size=Config.TRAINING_BATCH_SIZE, verbose=0,
                            shuffle=False)
-            print(history.history.keys())
             plt.plot(history.history['accuracy'])
             plt.title('model accuracy')
             plt.ylabel('accuracy')
