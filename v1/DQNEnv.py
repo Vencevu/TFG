@@ -167,13 +167,14 @@ class DQNAgent:
             plt.xlabel('epoch')
             plt.legend(['train', 'test'], loc='upper left')
             plt.savefig('../graficas/v1/Acc_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
-
+            plt.clf()
             plt.plot(history.history['loss'])
             plt.title('model loss')
             plt.ylabel('loss')
             plt.xlabel('epoch')
             plt.legend(['train', 'test'], loc='upper left')
             plt.savefig('../graficas/v1/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            plt.clf()
 
         ## updating to determine if we want to update target_model
         if log_this_step:

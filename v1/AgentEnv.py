@@ -90,7 +90,7 @@ class CarAgent(agent.Agent):
             plt.xlabel("Episodios")
             plt.ylabel("Distancia al objetivo")
             plt.savefig('../graficas/v1/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
-            
+            plt.clf()
             self.agent_dqn.train()
             self.episode = 0
 
