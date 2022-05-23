@@ -24,7 +24,7 @@ class CarAgent(agent.Agent):
             ep_rewards = [Config.MIN_REWARD]
             #Para la grafica
             xpoints = [x for x in range(1, Config.EPISODES + 1)]
-            accX = [x for x in range(1, Config.EPISODES + 1, 20)]
+            accX = [x for x in range(20, Config.EPISODES + 1, 20)]
             ypoints = []
             accY = []
             lossY = []
