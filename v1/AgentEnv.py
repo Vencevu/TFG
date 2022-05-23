@@ -24,7 +24,10 @@ class CarAgent(agent.Agent):
             ep_rewards = [Config.MIN_REWARD]
             #Para la grafica
             xpoints = [x for x in range(1, Config.EPISODES + 1)]
+            accX = [x for x in range(1, Config.EPISODES + 1, 20)]
             ypoints = []
+            accY = []
+            lossY = []
 
             for self.episode in tqdm(range(1, Config.EPISODES + 1)):
                 self.env.reset()
@@ -79,18 +82,34 @@ class CarAgent(agent.Agent):
                 if epsilon > Config.MIN_EPSILON:
                     epsilon *= Config.EPSILON_DECAY
                     epsilon = max(Config.MIN_EPSILON, epsilon)
+
+                if self.episode % 20 == 0:
+                    acc, loss = self.agent_dqn.train()
+                    accY.append(acc)
+                    lossY.append(loss)
                     
 
             print(colored('End and Save Model...', 'green'))
             self.env.destroy_all_actors()
             self.agent_dqn.save_rl_model()
 
-            distGraph = plt.scatter(xpoints, ypoints)
-            distGraph.xlabel("Episodios")
-            distGraph.ylabel("Distancia al objetivo")
-            distGraph.savefig('../graficas/v1/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            plt.scatter(xpoints, ypoints)
+            plt.xlabel("Episodios")
+            plt.ylabel("Distancia al objetivo")
+            plt.savefig('../graficas/v1/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            plt.clf()
+            plt.scatter(accX, accY)
+            plt.title('model accuracy')
+            plt.ylabel('accuracy')
+            plt.xlabel('epoch')
+            plt.savefig('../graficas/v1/Acc_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            plt.clf()
+            plt.scatter(accX, lossY)
+            plt.title('model loss')
+            plt.ylabel('loss')
+            plt.xlabel('epoch')
+            plt.savefig('../graficas/v1/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
             
-            self.agent_dqn.train()
             self.episode = 0
 
             self.kill()

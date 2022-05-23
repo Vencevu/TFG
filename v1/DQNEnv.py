@@ -161,19 +161,6 @@ class DQNAgent:
             tf.compat.v1.keras.backend.set_session(self.sess)
             history = self.model.fit(np.array(X) / 255, np.array(y), batch_size=Config.TRAINING_BATCH_SIZE, verbose=0,
                            shuffle=False)
-            accGraph = plt.scatter(history.history['accuracy'])
-            accGraph.title('model accuracy')
-            accGraph.ylabel('accuracy')
-            accGraph.xlabel('epoch')
-            accGraph.legend(['train', 'test'], loc='upper left')
-            accGraph.savefig('../graficas/v1/Acc_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
-            
-            lossGraph = plt.scatter(history.history['loss'])
-            lossGraph.title('model loss')
-            lossGraph.ylabel('loss')
-            lossGraph.xlabel('epoch')
-            lossGraph.legend(['train', 'test'], loc='upper left')
-            lossGraph.savefig('../graficas/v1/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
 
         ## updating to determine if we want to update target_model
         if log_this_step:
@@ -183,6 +170,8 @@ class DQNAgent:
         if self.target_update_counter > Config.UPDATE_TARGET_EVERY:
             self.target_model.set_weights(self.model.get_weights())
             self.target_update_counter = 0
+        
+        return history.history['accuracy'], history.history['loss']
 
     
     def get_qs(self, state):
