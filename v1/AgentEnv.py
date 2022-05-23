@@ -79,18 +79,17 @@ class CarAgent(agent.Agent):
                 if epsilon > Config.MIN_EPSILON:
                     epsilon *= Config.EPSILON_DECAY
                     epsilon = max(Config.MIN_EPSILON, epsilon)
-                
-                
+                    
 
             print(colored('End and Save Model...', 'green'))
             self.env.destroy_all_actors()
             self.agent_dqn.save_rl_model()
 
-            plt.scatter(xpoints, ypoints)
-            plt.xlabel("Episodios")
-            plt.ylabel("Distancia al objetivo")
-            plt.savefig('../graficas/v1/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
-            plt.clf()
+            distGraph = plt.scatter(xpoints, ypoints)
+            distGraph.xlabel("Episodios")
+            distGraph.ylabel("Distancia al objetivo")
+            distGraph.savefig('../graficas/v1/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            
             self.agent_dqn.train()
             self.episode = 0
 
