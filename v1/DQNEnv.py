@@ -173,7 +173,7 @@ class DQNAgent:
         
         return history.history['accuracy'], history.history['loss']
 
-    
+
     def get_qs(self, state):
         with self.graph.as_default():
             tf.compat.v1.keras.backend.set_session(self.sess)
