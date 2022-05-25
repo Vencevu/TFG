@@ -92,19 +92,19 @@ class CarAgent(agent.Agent):
                     plt.scatter(xpoints, ypoints)
                     plt.xlabel("Episodios")
                     plt.ylabel("Distancia al objetivo")
-                    plt.savefig('../graficas/v1/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+                    plt.savefig('../graficas/v2/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
                     plt.clf()
                     plt.plot(accX, accY)
                     plt.title('model accuracy')
                     plt.ylabel('accuracy')
                     plt.xlabel('epoch')
-                    plt.savefig('../graficas/v1/Acc_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+                    plt.savefig('../graficas/v2/Acc_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
                     plt.clf()
                     plt.plot(accX, lossY)
                     plt.title('model loss')
                     plt.ylabel('loss')
                     plt.xlabel('epoch')
-                    plt.savefig('../graficas/v1/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+                    plt.savefig('../graficas/v2/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
                     
                     self.episode = 0
 
