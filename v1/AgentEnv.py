@@ -84,35 +84,33 @@ class CarAgent(agent.Agent):
                         acc, loss = self.agent_dqn.train()
                         accY.append(acc)
                         lossY.append(loss)
-                        
-                    print(colored('End and Save Model...', 'green'))
-                    self.env.destroy_all_actors()
-                    self.agent_dqn.save_rl_model()
-
-                    plt.scatter(xpoints, ypoints)
-                    plt.xlabel("Episodios")
-                    plt.ylabel("Distancia al objetivo")
-                    plt.savefig('../graficas/v1/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
-                    plt.clf()
-                    plt.plot(accX, accY)
-                    plt.title('model accuracy')
-                    plt.ylabel('accuracy')
-                    plt.xlabel('epoch')
-                    plt.savefig('../graficas/v1/Acc_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
-                    plt.clf()
-                    plt.plot(accX, lossY)
-                    plt.title('model loss')
-                    plt.ylabel('loss')
-                    plt.xlabel('epoch')
-                    plt.savefig('../graficas/v1/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
-                    
-                    self.episode = 0
-
-                    self.kill()
                 
                 except Exception:
                     pass
                 
+            print(colored('End and Save Model...', 'green'))
+            self.env.destroy_all_actors()
+            self.agent_dqn.save_rl_model()
+
+            plt.scatter(xpoints, ypoints)
+            plt.xlabel("Episodios")
+            plt.ylabel("Distancia al objetivo")
+            plt.savefig('../graficas/v1/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            plt.clf()
+            plt.plot(accX, accY)
+            plt.title('model accuracy')
+            plt.ylabel('accuracy')
+            plt.xlabel('epoch')
+            plt.savefig('../graficas/v1/Acc_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            plt.clf()
+            plt.plot(accX, lossY)
+            plt.title('model loss')
+            plt.ylabel('loss')
+            plt.xlabel('epoch')
+            plt.savefig('../graficas/v1/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+
+            self.episode = 0
+            self.kill()            
             
         async def on_start(self):
             self.agent_dqn = DQNAgent()
