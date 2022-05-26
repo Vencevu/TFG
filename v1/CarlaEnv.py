@@ -110,7 +110,7 @@ class CarlaEnv:
         vel = self.vehicle_velocity()
 
         # Penalizacion por velocidad
-        if vel < 5 or vel > 20:
+        if vel < 5 or vel > 30:
             self.reward = Config.MIN_REWARD
         else:
             self.reward = Config.INT_REWARD
