@@ -157,7 +157,7 @@ class CarlaEnv:
         
         # Penalizacion por aproximacion a obstaculo (LIDAR)
         if self.obj_prox > 0:
-            self.reward = Config.MIN_REWARD / self.obj_prox
+            self.reward = Config.INT_REWARD * self.obj_prox
 
         # Reinicio por colision
         if self.collision != None:
@@ -198,7 +198,7 @@ class CarlaEnv:
         Z = points[:, 2]
         D = np.sqrt(X**2 + Y**2 + (Z + 1)**2)
         # Nos quedamos con distancias menores a 3 metros
-        D = D[D[:] < 2.3]
+        D = D[D[:] < 3]
 
         if D.shape[0] > 0:
             self.obj_prox = np.amin(D)
