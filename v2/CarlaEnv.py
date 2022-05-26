@@ -34,6 +34,8 @@ class CarlaEnv:
         self.add_sensor("obs_det")
         self.collision = None
         self.add_sensor("col_det")
+        self.obj_prox = 0
+        self.add_sensor("lidar")
         self.episode_start = time.time()
 
     def destroy_all_actors(self):
@@ -92,7 +94,7 @@ class CarlaEnv:
             lidar_bp.set_attribute('dropoff_zero_intensity', lidar_bp.get_attribute('dropoff_zero_intensity').recommended_values[0])
             lidar_bp.set_attribute('channels',str(64))
             lidar_bp.set_attribute('points_per_second',str(100000))
-            lidar_bp.set_attribute('rotation_frequency',str(60))
+            lidar_bp.set_attribute('rotation_frequency',str(40))
             lidar_bp.set_attribute('range',str(20))
 
             lidar_location = carla.Location(0, 0, 1.5)
@@ -156,12 +158,11 @@ class CarlaEnv:
         # Penalizacion por aproximacion a obstaculo (LIDAR)
         if self.obj_prox > 0:
             self.reward = Config.MIN_REWARD / self.obj_prox
-            self.donde = True
-            self.obj_prox = 0
 
         # Reinicio por colision
         if self.collision != None:
             self.reward = Config.MIN_REWARD * 3
+            self.done = True
             print("Collision-Reset...")
             
 
@@ -170,7 +171,6 @@ class CarlaEnv:
             self.done = True
             self.reward += Config.MIN_REWARD
             print("Time-Reset...")
-            print("Distancia a objetivo: ", distance)
         
         return self.front_camera, vel, self.reward, self.done, None
 
@@ -191,14 +191,14 @@ class CarlaEnv:
         points = data[:, :-1]
         # Eliminamos puntos pertenecientes al suelo y al propio coche
         points = points[points[:, 2] > -1, :]
-        points = points[np.sqrt(points[:, 0]**2 + points[:, 1]**2) > 2, :]
+        points = points[np.sqrt(points[:, 0]**2 + points[:, 1]**2) > 1.9, :]
         # Calculamos vector de distancias
         X = points[:, 0]
         Y = points[:, 1]
         Z = points[:, 2]
         D = np.sqrt(X**2 + Y**2 + (Z + 1)**2)
         # Nos quedamos con distancias menores a 3 metros
-        D = D[D[:] < 3]
+        D = D[D[:] < 2.3]
 
         if D.shape[0] > 0:
             self.obj_prox = np.amin(D)
