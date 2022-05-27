@@ -67,13 +67,13 @@ class CarAgent(agent.Agent):
                         step += 1
 
                         if self.done:
-                            if reset_type == 1:
+                            if reset_type == 3:
                                 y_axis_time.append(distance)
                                 x_axis_time.append(self.episode)
-                            elif reset_type == 0:
+                            elif reset_type == 2:
                                 y_axis_col.append(distance)
                                 x_axis_col.append(self.episode)
-                            elif reset_type == 2:
+                            elif reset_type == 1:
                                 y_axis_goal.append(distance)
                                 x_axis_goal.append(self.episode)
                             
@@ -98,8 +98,8 @@ class CarAgent(agent.Agent):
                         accY.append(acc)
                         lossY.append(loss)
                 
-                except Exception:
-                    pass
+                except Exception as e:
+                    print("Error: ",e)
                 
             print(colored('End and Save Model...', 'green'))
             self.env.destroy_all_actors()
@@ -108,7 +108,7 @@ class CarAgent(agent.Agent):
             plt.scatter(x_axis_time, y_axis_time, label="time reset")
             plt.scatter(x_axis_col, y_axis_col, label="collision reset")
             plt.scatter(x_axis_goal, y_axis_goal, label="goal")
-            plt.legend(position="upper left")
+            plt.legend(loc="upper left")
             plt.xlabel("Episodios")
             plt.ylabel("Distancia al objetivo")
             plt.savefig('../graficas/v1/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))

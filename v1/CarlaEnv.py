@@ -97,6 +97,7 @@ class CarlaEnv:
 
     def step(self, action, distance):
         self.done = False
+        reset_type = 0
 
         if action == 0:
             self.vehicle.apply_control(carla.VehicleControl(throttle=0.7, brake=0))
@@ -121,7 +122,7 @@ class CarlaEnv:
         else:
             self.reward += Config.MAX_REWARD
             self.done = True
-            self.reset_type = 2
+            reset_type = 1
             print(colored("Objetivo alcanzado", 'yellow'))
 
         # Penalizacion por aproximacion a obstaculo
@@ -132,7 +133,7 @@ class CarlaEnv:
         # Reinicio por colision
         if self.collision != None:
             self.done = True
-            self.reset_type = 0
+            reset_type = 2
             self.reward = Config.MIN_REWARD * 3
             print("Collision-Reset...")
             
@@ -140,11 +141,11 @@ class CarlaEnv:
         # Reinicio por tiempo
         if self.episode_start + Config.SECONDS_PER_EPISODE < time.time():  
             self.done = True
-            self.reset_type = 1
+            reset_type = 3
             self.reward += Config.MIN_REWARD
             print("Time-Reset...")
         
-        return self.front_camera, vel, self.reward, self.done, self.reset_type
+        return self.front_camera, vel, self.reward, self.done, reset_type
 
     def process_img(self, image):
         i = np.array(image.raw_data)
