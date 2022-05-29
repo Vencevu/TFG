@@ -24,9 +24,13 @@ class CarAgent(agent.Agent):
             epsilon = Config.epsilon
             ep_rewards = [Config.MIN_REWARD]
             #Para la grafica
-            xpoints = [x for x in range(1, Config.EPISODES + 1)]
+            x_axis_time = []
+            x_axis_goal = []
+            x_axis_col = []
             accX = [x for x in range(20, Config.EPISODES + 1, 20)]
-            ypoints = []
+            y_axis_time = []
+            y_axis_col = []
+            y_axis_goal = []
             accY = []
             lossY = []
 
@@ -55,7 +59,7 @@ class CarAgent(agent.Agent):
                             time.sleep(1 / Config.FPS)
 
                         distance = self.env.distance_to_goal(self.goal_x, self.goal_y)
-                        new_state, car_velocity, reward, self.done, _ = self.env.step(action, distance)
+                        new_state, car_velocity, reward, self.done, reset_type = self.env.step(action, distance)
                         episode_reward += reward
                         self.current_state = new_state
                         self.agent_dqn.update_replay_memory((self.current_state, action, reward, new_state, self.done))
@@ -63,7 +67,16 @@ class CarAgent(agent.Agent):
                         step += 1
 
                         if self.done:
-                            ypoints.append(distance)
+                            if reset_type == 3:
+                                y_axis_time.append(distance)
+                                x_axis_time.append(self.episode)
+                            elif reset_type == 2:
+                                y_axis_col.append(distance)
+                                x_axis_col.append(self.episode)
+                            elif reset_type == 1:
+                                y_axis_goal.append(distance)
+                                x_axis_goal.append(self.episode)
+                            
                             break
                     
                     ep_rewards.append(episode_reward)
@@ -85,33 +98,35 @@ class CarAgent(agent.Agent):
                         accY.append(acc)
                         lossY.append(loss)
                 
-                except Exception:
-                    pass
-            
+                except Exception as e:
+                    print("Error: ",e)
+                
             print(colored('End and Save Model...', 'green'))
             self.env.destroy_all_actors()
             self.agent_dqn.save_rl_model()
 
-            plt.scatter(xpoints, ypoints)
+            plt.scatter(x_axis_time, y_axis_time, label="time reset")
+            plt.scatter(x_axis_col, y_axis_col, label="collision reset")
+            plt.scatter(x_axis_goal, y_axis_goal, label="goal")
+            plt.legend(loc="upper left")
             plt.xlabel("Episodios")
             plt.ylabel("Distancia al objetivo")
-            plt.savefig('../graficas/v2/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            plt.savefig('../graficas/v1/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
             plt.clf()
             plt.plot(accX, accY)
             plt.title('model accuracy')
             plt.ylabel('accuracy')
             plt.xlabel('epoch')
-            plt.savefig('../graficas/v2/Acc_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            plt.savefig('../graficas/v1/Acc_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
             plt.clf()
             plt.plot(accX, lossY)
             plt.title('model loss')
             plt.ylabel('loss')
             plt.xlabel('epoch')
-            plt.savefig('../graficas/v2/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
-            
-            self.episode = 0
+            plt.savefig('../graficas/v1/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
 
-            self.kill()
+            self.episode = 0
+            self.kill()            
             
         async def on_start(self):
             self.agent_dqn = DQNAgent()

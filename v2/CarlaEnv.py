@@ -124,6 +124,7 @@ class CarlaEnv:
 
     def step(self, action, distance):
         self.done = False
+        reset_type = 0
 
         if action == 0:
             self.vehicle.apply_control(carla.VehicleControl(throttle=0.7, brake=0))
@@ -148,6 +149,7 @@ class CarlaEnv:
         else:
             self.reward += Config.MAX_REWARD
             self.done = True
+            reset_type = 1
             print("Objetivo alcanzado")
 
         # Penalizacion por aproximacion a obstaculo
@@ -162,6 +164,7 @@ class CarlaEnv:
         # Reinicio por colision
         if self.collision != None:
             self.reward = Config.MIN_REWARD * 3
+            reset_type = 2
             self.done = True
             print("Collision-Reset...")
             
@@ -169,10 +172,11 @@ class CarlaEnv:
         # Reinicio por tiempo
         if self.episode_start + Config.SECONDS_PER_EPISODE < time.time():  
             self.done = True
+            reset_type = 1
             self.reward += Config.MIN_REWARD
             print("Time-Reset...")
         
-        return self.front_camera, vel, self.reward, self.done, None
+        return self.front_camera, vel, self.reward, self.done, reset_type
 
     def process_img(self, image):
         i = np.array(image.raw_data)
@@ -198,7 +202,7 @@ class CarlaEnv:
         Z = points[:, 2]
         D = np.sqrt(X**2 + Y**2 + (Z + 1)**2)
         # Nos quedamos con distancias menores a 3 metros
-        D = D[D[:] < 3]
+        D = D[D[:] < 4]
 
         if D.shape[0] > 0:
             self.obj_prox = np.amin(D)
