@@ -172,7 +172,7 @@ class CarlaEnv:
         # Reinicio por tiempo
         if self.episode_start + Config.SECONDS_PER_EPISODE < time.time():  
             self.done = True
-            reset_type = 1
+            reset_type = 3
             self.reward += Config.MIN_REWARD
             print("Time-Reset...")
         
