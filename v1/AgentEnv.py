@@ -5,6 +5,7 @@ warnings.filterwarnings("ignore")
 from spade import agent, quit_spade
 from spade.behaviour import CyclicBehaviour
 from tqdm import tqdm
+import csv
 import time
 from termcolor import colored
 import Config
@@ -20,9 +21,22 @@ class CarAgent(agent.Agent):
     class MyBehav(CyclicBehaviour):
 
         def dqn_car(self):
-            
             epsilon = Config.epsilon
             ep_rewards = [Config.MIN_REWARD]
+
+            #Guardamos los datos en csv
+            dist_csv = open('../csv/v1/Distances_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            dist_csv_writer = csv.writer(dist_csv)
+            dist_csv_writer.writerow(['Episodio', 'Distancia', 'Tipo'])
+
+            acc_csv = open('../csv/v1/Acc_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            acc_csv_writer = csv.writer(acc_csv)
+            acc_csv_writer.writerow(['Episodio', 'Precision'])
+
+            loss_csv = open('../csv/v1/Loss_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            loss_csv_writer = csv.writer(loss_csv)
+            loss_csv_writer.writerow(['Episodio', 'Perdida'])
+
             #Para la grafica
             x_axis_time = []
             x_axis_goal = []
@@ -67,15 +81,21 @@ class CarAgent(agent.Agent):
                         step += 1
 
                         if self.done:
+                            reset_type_csv = ''
                             if reset_type == 3:
                                 y_axis_time.append(distance)
                                 x_axis_time.append(self.episode)
+                                reset_type_csv = 'Tiempo'
                             elif reset_type == 2:
                                 y_axis_col.append(distance)
                                 x_axis_col.append(self.episode)
+                                reset_type_csv = 'Colision'
                             elif reset_type == 1:
                                 y_axis_goal.append(distance)
                                 x_axis_goal.append(self.episode)
+                                reset_type_csv = 'Objetivo'
+                            
+                            dist_csv_writer.writerow([self.episode, distance, reset_type_csv])
                             
                             break
                     
@@ -97,6 +117,8 @@ class CarAgent(agent.Agent):
                         acc, loss = self.agent_dqn.train()
                         accY.append(acc)
                         lossY.append(loss)
+                        acc_csv_writer.writerow([self.episode, acc])
+                        loss_csv_writer.writerow([self.episode, loss])
                 
                 except Exception as e:
                     print("Error: ",e)
@@ -124,6 +146,10 @@ class CarAgent(agent.Agent):
             plt.ylabel('loss')
             plt.xlabel('epoch')
             plt.savefig('../graficas/v1/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            
+            dist_csv.close()
+            acc_csv.close()
+            loss_csv.close()
 
             self.episode = 0
             self.kill()            
