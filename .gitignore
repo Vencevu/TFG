@@ -1,6 +1,7 @@
 CARLA/
 test_images/
 DQN/
+csv/
 graficas/
 __pycache__/
 self.log_dir/

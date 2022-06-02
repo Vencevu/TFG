@@ -72,7 +72,7 @@ class CarAgent(agent.Agent):
                             # This takes no time, so we add a delay matching 60 FPS (prediction above takes longer)
                             time.sleep(1 / Config.FPS)
 
-                        distance = self.env.distance_to_goal(self.goal_x, self.goal_y)
+                        distance = round(self.env.distance_to_goal(self.goal_x, self.goal_y), 3)
                         new_state, car_velocity, reward, self.done, reset_type = self.env.step(action, distance)
                         episode_reward += reward
                         self.current_state = new_state
@@ -117,8 +117,8 @@ class CarAgent(agent.Agent):
                         acc, loss = self.agent_dqn.train()
                         accY.append(acc)
                         lossY.append(loss)
-                        acc_csv_writer.writerow([self.episode, acc])
-                        loss_csv_writer.writerow([self.episode, loss])
+                        acc_csv_writer.writerow([self.episode, round(acc[0], 3)])
+                        loss_csv_writer.writerow([self.episode, round(loss[0], 3)])
                 
                 except Exception as e:
                     print("Error: ",e)
