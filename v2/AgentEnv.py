@@ -25,16 +25,16 @@ class CarAgent(agent.Agent):
             ep_rewards = [Config.MIN_REWARD]
 
             #Guardamos los datos en csv
-            dist_csv = open('../csv/v2/Distances_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
-            dist_csv_writer = csv.writer(dist_csv)
+            dist_csv = open('../csv/v2/Distances_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE), 'w')
+            dist_csv_writer = csv.writer(dist_csv, delimiter=";")
             dist_csv_writer.writerow(['Episodio', 'Distancia', 'Tipo'])
 
-            acc_csv = open('../csv/v2/Acc_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
-            acc_csv_writer = csv.writer(acc_csv)
+            acc_csv = open('../csv/v2/Acc_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE), 'w')
+            acc_csv_writer = csv.writer(acc_csv, delimiter=";")
             acc_csv_writer.writerow(['Episodio', 'Precision'])
 
-            loss_csv = open('../csv/v2/Loss_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
-            loss_csv_writer = csv.writer(loss_csv)
+            loss_csv = open('../csv/v2/Loss_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE), 'w')
+            loss_csv_writer = csv.writer(loss_csv, delimiter=";")
             loss_csv_writer.writerow(['Episodio', 'Perdida'])
 
             #Para la grafica
