@@ -149,11 +149,26 @@ class DQNAgent:
             X.append(current_state)  ## La imagen que tenemo
             y.append(current_qs)  ## la Q que tenemos
 
+        ## only trying to log per episode, not actual training step, so we're going to use the below to keep track
+        log_this_step = False
+        if self.tensorboard.step > self.last_logged_episode:
+            log_this_step = True
+            self.last_log_episode = self.tensorboard.step
+            
         ## fit our model
         with self.graph.as_default():
             tf.compat.v1.keras.backend.set_session(self.sess)
             history = self.model.fit(np.array(X) / 255, np.array(y), batch_size=Config.TRAINING_BATCH_SIZE, verbose=0,
                            shuffle=False)
+        
+        ## updating to determine if we want to update target_model
+        if log_this_step:
+            self.target_update_counter += 1
+
+        # If counter reaches set value, update target network with weights of main network
+        if self.target_update_counter > Config.UPDATE_TARGET_EVERY:
+            self.target_model.set_weights(self.model.get_weights())
+            self.target_update_counter = 0
         
         return history.history['accuracy'], history.history['loss']
 
