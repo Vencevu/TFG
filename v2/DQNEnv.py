@@ -69,12 +69,12 @@ class DQNAgent:
         # self.model.save('models/rlmodel.h5')
         # self.save_model('models/', 'RL_Model', self.model)
         try:
-            self.model.save_weights('models/Weights_RL_Model.h5', save_format='h5')
+            self.model.save_weights('models/Weights_RL_Model.h5')
         except:
             pass
 
         try:
-            self.model.save('models/RL_Model.h5', save_format='h5')
+            self.model.save('models/RL_Model.h5')
         except:
             pass
 
