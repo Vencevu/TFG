@@ -149,21 +149,21 @@ class DQNAgent:
             self.last_log_episode = self.tensorboard.step
 
         ## fit our model
-        ## setting the tensorboard callback, only if log_this_step is true. If it's false, then we'll still fit, we just wont log to TensorBoard.
         with self.graph.as_default():
             tf.compat.v1.keras.backend.set_session(self.sess)
-            self.model.fit(np.array(X) / 255, np.array(y), batch_size=Config.TRAINING_BATCH_SIZE, verbose=0,
-                           shuffle=False,
-                           callbacks=[self.tensorboard] if log_this_step else None)
+            history = self.model.fit(np.array(X) / 255, np.array(y), batch_size=Config.TRAINING_BATCH_SIZE, verbose=0,
+                           shuffle=False)
+        
+            ## updating to determine if we want to update target_model
+            if log_this_step:
+                self.target_update_counter += 1
 
-        ## updating to determine if we want to update target_model
-        if log_this_step:
-            self.target_update_counter += 1
-
-        # If counter reaches set value, update target network with weights of main network
-        if self.target_update_counter > Config.UPDATE_TARGET_EVERY:
-            self.target_model.set_weights(self.model.get_weights())
-            self.target_update_counter = 0
+            # If counter reaches set value, update target network with weights of main network
+            if self.target_update_counter > Config.UPDATE_TARGET_EVERY:
+                self.target_model.set_weights(self.model.get_weights())
+                self.target_update_counter = 0
+            
+        return history.history['accuracy'], history.history['loss']
 
     def get_qs(self, state):
         with self.graph.as_default():

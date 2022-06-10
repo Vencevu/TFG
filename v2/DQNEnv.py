@@ -73,6 +73,11 @@ class DQNAgent:
         except:
             pass
 
+        try:
+            self.model.save_model('models/RLModel')
+        except:
+            pass
+
     def create_model(self):
         ## input: RGB data, should be normalized when coming into CNN
 
