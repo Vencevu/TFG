@@ -121,7 +121,7 @@ class CarAgent(agent.Agent):
                         loss_csv_writer.writerow([self.episode, round(loss[0], 3)])
                 
                 except Exception as e:
-                    print("Error: ",e)
+                    print("Agent error: ",e)
                 
             print(colored('End and Save Model...', 'green'))
             self.env.destroy_all_actors()

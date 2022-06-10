@@ -156,14 +156,14 @@ class DQNAgent:
             history = self.model.fit(np.array(X) / 255, np.array(y), batch_size=Config.TRAINING_BATCH_SIZE, verbose=0,
                            shuffle=False)
         
-        ## updating to determine if we want to update target_model
-        if log_this_step:
-            self.target_update_counter += 1
+            ## updating to determine if we want to update target_model
+            if log_this_step:
+                self.target_update_counter += 1
 
-        # If counter reaches set value, update target network with weights of main network
-        if self.target_update_counter > Config.UPDATE_TARGET_EVERY:
-            self.target_model.set_weights(self.model.get_weights())
-            self.target_update_counter = 0
+            # If counter reaches set value, update target network with weights of main network
+            if self.target_update_counter > Config.UPDATE_TARGET_EVERY:
+                self.target_model.set_weights(self.model.get_weights())
+                self.target_update_counter = 0
         
         return history.history['accuracy'], history.history['loss']
 

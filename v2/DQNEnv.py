@@ -52,11 +52,6 @@ class DQNAgent:
         with self.graph.as_default():
             tf.compat.v1.keras.backend.set_session(self.sess)
             self.model = self.create_model()
-
-            # self.model.save('/home/jarain78/Pycharm_Projects/AssistantRobotSimulator/DQN_PyBullet/models/RLModel/')
-            # self.model.save_weights(
-            #    '/home/jarain78/Pycharm_Projects/AssistantRobotSimulator/DQN_PyBullet/models/W_RLModel/')
-
             ## target model (this is what we .predict against every step)
             self.target_model = self.create_model()
             self.target_model.set_weights(self.model.get_weights())
@@ -155,14 +150,14 @@ class DQNAgent:
             history = self.model.fit(np.array(X) / 255, np.array(y), batch_size=Config.TRAINING_BATCH_SIZE, verbose=0,
                            shuffle=False)
         
-        ## updating to determine if we want to update target_model
-        if log_this_step:
-            self.target_update_counter += 1
+            ## updating to determine if we want to update target_model
+            if log_this_step:
+                self.target_update_counter += 1
 
-        # If counter reaches set value, update target network with weights of main network
-        if self.target_update_counter > Config.UPDATE_TARGET_EVERY:
-            self.target_model.set_weights(self.model.get_weights())
-            self.target_update_counter = 0
+            # If counter reaches set value, update target network with weights of main network
+            if self.target_update_counter > Config.UPDATE_TARGET_EVERY:
+                self.target_model.set_weights(self.model.get_weights())
+                self.target_update_counter = 0
             
         return history.history['accuracy'], history.history['loss']
 
