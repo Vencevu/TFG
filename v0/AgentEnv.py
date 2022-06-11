@@ -75,8 +75,8 @@ class CarAgent(agent.Agent):
                         distance = round(self.env.distance_to_goal(self.goal_x, self.goal_y), 3)
                         new_state, car_velocity, reward, self.done, reset_type = self.env.step(action, distance)
                         episode_reward += reward
-                        self.current_state = new_state
                         self.agent_dqn.update_replay_memory((self.current_state, action, reward, new_state, self.done))
+                        self.current_state = new_state
                         
                         step += 1
 
