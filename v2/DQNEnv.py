@@ -65,18 +65,18 @@ class DQNAgent:
         # self.save_model('models/', 'RL_Model', self.model)
         try:
             self.model.save_weights('models/Weights_RL_Model.h5')
-        except:
-            pass
+        except Exception as e:
+            print("Error al guardar: ",e)
 
         try:
             self.model.save('models/RL_Model.h5')
-        except:
-            pass
+        except Exception as e:
+            print("Error al guardar: ",e)
 
         try:
             self.model.save_model('models/RLModel')
-        except:
-            pass
+        except Exception as e:
+            print("Error al guardar: ",e)
 
     def create_model(self):
         ## input: RGB data, should be normalized when coming into CNN
