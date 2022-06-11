@@ -162,6 +162,8 @@ class CarAgent(agent.Agent):
             self.goal_y = Config.GOAL_Y
 
             self.current_state = self.env.front_camera
+            #Cargamos los pesos si hay
+            self.agent_dqn.load_rl_model()
 
         async def run(self):
             self.dqn_car()
