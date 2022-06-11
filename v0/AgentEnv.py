@@ -80,7 +80,7 @@ class CarAgent(agent.Agent):
 
                         if self.done:
                             reset_type_csv = ''
-                            if reset_type == 3:
+                            if reset_type == 2:
                                 y_axis_time.append(distance)
                                 x_axis_time.append(self.episode)
                                 reset_type_csv = 'Tiempo'

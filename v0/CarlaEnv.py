@@ -91,7 +91,7 @@ class CarlaEnv:
         if self.episode_start + Config.SECONDS_PER_EPISODE < time.time():  ## when to stop
             self.done = True
             self.reward += Config.MIN_REWARD
-            reset_type = 3
+            reset_type = 2
             print("Time-Reset...")
             print("Distancia a objetivo: ", distance)
         
