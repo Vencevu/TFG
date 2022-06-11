@@ -32,7 +32,7 @@ class CarlaEnv:
 
     def gen_vehicle(self):
         bp = self.blueprint_library.filter('vehicle')[0]
-        transform = self.map.get_spawn_points()[0]
+        transform = carla.Transform(carla.Location(Config.START_X, Config.START_Y, 0.6))
         self.vehicle = self.world.try_spawn_actor(bp, transform) 
         while(self.vehicle == None):
             transform.location.x -= 1
@@ -65,6 +65,9 @@ class CarlaEnv:
         return math.sqrt(pow((a), 2) + pow((b), 2))
 
     def step(self, action, distance):
+        self.done = False
+        reset_type = 0
+
         if action == 0:
             self.vehicle.apply_control(carla.VehicleControl(throttle=1, brake=0))
         elif action == 1:
@@ -74,26 +77,25 @@ class CarlaEnv:
 
         if(vel < 5 or vel > 20):
             self.reward = Config.MIN_REWARD
-            self.done = False
         else:
             self.reward = Config.INT_REWARD
-            self.done = False
         
         if distance > 1:
             self.reward += Config.INT_REWARD * (1/distance)
-            self.done = False
         else:
             self.reward += Config.MAX_REWARD
             self.done = True
+            reset_type = 1
             print("Objetivo alcanzado")
         
         if self.episode_start + Config.SECONDS_PER_EPISODE < time.time():  ## when to stop
             self.done = True
             self.reward += Config.MIN_REWARD
+            reset_type = 3
             print("Time-Reset...")
             print("Distancia a objetivo: ", distance)
         
-        return self.front_camera, vel, self.reward, self.done, None
+        return self.front_camera, vel, self.reward, self.done, reset_type
 
     def process_img(self, image):
         i = np.array(image.raw_data)

@@ -40,10 +40,8 @@ class CarAgent(agent.Agent):
             #Para la grafica
             x_axis_time = []
             x_axis_goal = []
-            x_axis_col = []
             accX = [x for x in range(20, Config.EPISODES + 1, 20)]
             y_axis_time = []
-            y_axis_col = []
             y_axis_goal = []
             accY = []
             lossY = []
@@ -86,10 +84,6 @@ class CarAgent(agent.Agent):
                                 y_axis_time.append(distance)
                                 x_axis_time.append(self.episode)
                                 reset_type_csv = 'Tiempo'
-                            elif reset_type == 2:
-                                y_axis_col.append(distance)
-                                x_axis_col.append(self.episode)
-                                reset_type_csv = 'Colision'
                             elif reset_type == 1:
                                 y_axis_goal.append(distance)
                                 x_axis_goal.append(self.episode)
@@ -128,7 +122,6 @@ class CarAgent(agent.Agent):
             self.agent_dqn.save_rl_model()
 
             plt.scatter(x_axis_time, y_axis_time, label="time reset")
-            plt.scatter(x_axis_col, y_axis_col, label="collision reset")
             plt.scatter(x_axis_goal, y_axis_goal, label="goal")
             plt.legend(loc="upper left")
             plt.xlabel("Episodios")
