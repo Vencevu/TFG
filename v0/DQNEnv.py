@@ -63,10 +63,6 @@ class DQNAgent:
         with self.graph.as_default():
             try:
                 self.model.save_weights('models/Weights_RL_Model.h5')
-            except Exception as e:
-                print("Error al guardar: ",e)
-
-            try:
                 self.model.save('models/RL_Model.h5')
             except Exception as e:
                 print("Error al guardar: ",e)
