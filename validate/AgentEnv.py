@@ -25,15 +25,15 @@ class CarAgent(agent.Agent):
             ep_rewards = [Config.MIN_REWARD]
 
             #Guardamos los datos en csv
-            dist_csv = open('../csv/v2/Distances_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE), 'w')
+            dist_csv = open('../csv/validate/Distances_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE), 'w')
             dist_csv_writer = csv.writer(dist_csv, delimiter=";")
             dist_csv_writer.writerow(['Episodio', 'Distancia', 'Tipo'])
 
-            acc_csv = open('../csv/v2/Acc_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE), 'w')
+            acc_csv = open('../csv/validate/Acc_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE), 'w')
             acc_csv_writer = csv.writer(acc_csv, delimiter=";")
             acc_csv_writer.writerow(['Episodio', 'Precision'])
 
-            loss_csv = open('../csv/v2/Loss_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE), 'w')
+            loss_csv = open('../csv/validate/Loss_%d_%d_%d.csv' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE), 'w')
             loss_csv_writer = csv.writer(loss_csv, delimiter=";")
             loss_csv_writer.writerow(['Episodio', 'Perdida'])
 
@@ -133,19 +133,19 @@ class CarAgent(agent.Agent):
             plt.legend(loc="upper left")
             plt.xlabel("Episodios")
             plt.ylabel("Distancia al objetivo")
-            plt.savefig('../graficas/v2/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            plt.savefig('../graficas/validate/Distances_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
             plt.clf()
             plt.plot(accX, accY)
             plt.title('model accuracy')
             plt.ylabel('accuracy')
             plt.xlabel('epoch')
-            plt.savefig('../graficas/v2/Acc_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            plt.savefig('../graficas/validate/Acc_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
             plt.clf()
             plt.plot(accX, lossY)
             plt.title('model loss')
             plt.ylabel('loss')
             plt.xlabel('epoch')
-            plt.savefig('../graficas/v2/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
+            plt.savefig('../graficas/validate/Loss_%d_%d_%d.png' % (Config.EPISODES, Config.MINIBATCH_SIZE, Config.REPLAY_MEMORY_SIZE))
             
             dist_csv.close()
             acc_csv.close()
