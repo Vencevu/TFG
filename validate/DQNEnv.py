@@ -149,8 +149,8 @@ class DQNAgent:
         ## fit our model
         with self.graph.as_default():
             tf.compat.v1.keras.backend.set_session(self.sess)
-            history = self.model.fit(np.array(X) / 255, np.array(y), batch_size=Config.TRAINING_BATCH_SIZE, verbose=0,
-                           shuffle=False)
+            history = self.model.fit(np.array(X) / 255, np.array(y), batch_size=Config.TRAINING_BATCH_SIZE,
+                        verbose=0, shuffle=False)
         
             ## updating to determine if we want to update target_model
             if log_this_step:
