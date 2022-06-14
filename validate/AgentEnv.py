@@ -63,16 +63,16 @@ class CarAgent(agent.Agent):
                         # np.random.random() will give us the random number between 0 and 1. If this number is greater than
                         # our randomness variable,
                         # we will get Q values based on tranning, but otherwise, we will go random actions.
-                        # if np.random.random() > epsilon:
-                        #     # Get action from Q table
-                        #     action = np.argmax(self.agent_dqn.get_qs(self.current_state))
-                        # else:
-                        #     # Get random action
-                        #     action = np.random.randint(0, Config.N_ACTIONS)
-                        #     # This takes no time, so we add a delay matching 60 FPS (prediction above takes longer)
-                        #     time.sleep(1 / Config.FPS)
+                        if np.random.random() > epsilon:
+                            # Get action from Q table
+                            action = np.argmax(self.agent_dqn.get_qs(self.current_state))
+                        else:
+                            # Get random action
+                            action = np.random.randint(0, Config.N_ACTIONS)
+                            # This takes no time, so we add a delay matching 60 FPS (prediction above takes longer)
+                            time.sleep(1 / Config.FPS)
 
-                        action = np.argmax(self.agent_dqn.get_qs(self.current_state))
+                        # action = np.argmax(self.agent_dqn.get_qs(self.current_state))
                         distance = round(self.env.distance_to_goal(self.goal_x, self.goal_y), 3)
                         new_state, car_velocity, reward, self.done, reset_type = self.env.step(action, distance)
                         episode_reward += reward
