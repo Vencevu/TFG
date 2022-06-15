@@ -149,7 +149,7 @@ class CarAgent(agent.Agent):
 
             self.goal_x = Config.GOAL_X
             self.goal_y = Config.GOAL_Y
-            time.sleep(1)
+            
             self.current_state = self.env.front_camera
             #Cargamos los pesos si hay
             self.agent_dqn.load_rl_model()
