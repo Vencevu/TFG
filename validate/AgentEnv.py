@@ -76,6 +76,7 @@ class CarAgent(agent.Agent):
                             self.current_state = self.env.front_camera
                         else:
                             action = np.argmax(self.agent_dqn.get_qs(self.current_state))
+                            print(action)
                             distance = round(self.env.distance_to_goal(self.goal_x, self.goal_y), 3)
                             new_state, car_velocity, reward, self.done, reset_type = self.env.step(action, distance)
                             episode_reward += reward

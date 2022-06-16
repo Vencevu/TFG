@@ -11,7 +11,7 @@ import random
 import numpy as np
 import tensorflow as tf
 from collections import deque
-from keras.models import Model
+from keras.models import Model, load_model
 from keras.callbacks import TensorBoard
 from keras.applications.xception import Xception
 from keras.layers import Dense, GlobalAveragePooling2D, Flatten
@@ -71,7 +71,9 @@ class DQNAgent:
     def load_rl_model(self):
         with self.graph.as_default():
             try:
-                self.model.load_weights("models/Weights_RL_Model.h5")
+                self.model = load_model("models/RL_Model.h5")
+                #self.model.load_weights("models/Weights_RL_Model.h5")
+                self.target_model.set_weights(self.model.get_weights())
             except Exception as e:
                 print("Error al cargar modelo: ", e)
 
