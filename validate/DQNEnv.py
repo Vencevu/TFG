@@ -72,7 +72,7 @@ class DQNAgent:
         with self.graph.as_default():
             try:
                 self.model = load_model("models/RL_Model.h5")
-                #self.model.load_weights("models/Weights_RL_Model.h5")
+                self.model.load_weights("models/Weights_RL_Model.h5")
                 self.target_model.set_weights(self.model.get_weights())
             except Exception as e:
                 print("Error al cargar modelo: ", e)
