@@ -19,6 +19,7 @@ class CarAgent(agent.Agent):
 
     #Comportamiento del agente
     class MyBehav(CyclicBehaviour):
+        current_state = None
 
         def dqn_car(self):
             epsilon = Config.epsilon
@@ -71,34 +72,36 @@ class CarAgent(agent.Agent):
                         #     action = np.random.randint(0, Config.N_ACTIONS)
                         #     # This takes no time, so we add a delay matching 60 FPS (prediction above takes longer)
                         #     time.sleep(1 / Config.FPS)
-
-                        action = np.argmax(self.agent_dqn.get_qs(self.current_state))
-                        distance = round(self.env.distance_to_goal(self.goal_x, self.goal_y), 3)
-                        new_state, car_velocity, reward, self.done, reset_type = self.env.step(action, distance)
-                        episode_reward += reward
-                        self.agent_dqn.update_replay_memory((self.current_state, action, reward, new_state, self.done))
-                        self.current_state = new_state
-                        
-                        step += 1
-
-                        if self.done:
-                            reset_type_csv = ''
-                            if reset_type == 3:
-                                y_axis_time.append(distance)
-                                x_axis_time.append(self.episode)
-                                reset_type_csv = 'Tiempo'
-                            elif reset_type == 2:
-                                y_axis_col.append(distance)
-                                x_axis_col.append(self.episode)
-                                reset_type_csv = 'Colision'
-                            elif reset_type == 1:
-                                y_axis_goal.append(distance)
-                                x_axis_goal.append(self.episode)
-                                reset_type_csv = 'Objetivo'
+                        if self.current_state is None:
+                            self.current_state = self.env.front_camera
+                        else:
+                            action = np.argmax(self.agent_dqn.get_qs(self.current_state))
+                            distance = round(self.env.distance_to_goal(self.goal_x, self.goal_y), 3)
+                            new_state, car_velocity, reward, self.done, reset_type = self.env.step(action, distance)
+                            episode_reward += reward
+                            self.agent_dqn.update_replay_memory((self.current_state, action, reward, new_state, self.done))
+                            self.current_state = new_state
                             
-                            dist_csv_writer.writerow([self.episode, distance, reset_type_csv])
-                            
-                            break
+                            step += 1
+
+                            if self.done:
+                                reset_type_csv = ''
+                                if reset_type == 3:
+                                    y_axis_time.append(distance)
+                                    x_axis_time.append(self.episode)
+                                    reset_type_csv = 'Tiempo'
+                                elif reset_type == 2:
+                                    y_axis_col.append(distance)
+                                    x_axis_col.append(self.episode)
+                                    reset_type_csv = 'Colision'
+                                elif reset_type == 1:
+                                    y_axis_goal.append(distance)
+                                    x_axis_goal.append(self.episode)
+                                    reset_type_csv = 'Objetivo'
+                                
+                                dist_csv_writer.writerow([self.episode, distance, reset_type_csv])
+                                
+                                break
                     
                     ep_rewards.append(episode_reward)
                     if not self.episode % Config.AGGREGATE_STATS_EVERY or self.episode == 1:  ## every show_stats_every, which is 10 right now, show and save teh following
