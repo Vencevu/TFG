@@ -65,6 +65,8 @@ class CarAgent(agent.Agent):
                         # our randomness variable,
                         # we will get Q values based on tranning, but otherwise, we will go random actions.
                         if np.random.random() > epsilon:
+                            if self.current_state is None:
+                                self.current_state = self.env.front_camera
                             # Get action from Q table
                             action = np.argmax(self.agent_dqn.get_qs(self.current_state))
                         else:
