@@ -27,7 +27,7 @@ dummy = CarAgent("agente@localhost", "1234")
 future = dummy.start()
 future.result()
 
-while not dummy.is_alive():
+while dummy.is_alive():
     try:
         time.sleep(1)
     except KeyboardInterrupt:
