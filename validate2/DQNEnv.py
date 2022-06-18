@@ -76,8 +76,7 @@ class DQNAgent:
                 self.model = load_model("models/RL_Model.h5")
                 self.model.load_weights("models/Weights_RL_Model.h5")
                 self.target_model.set_weights(self.model.get_weights())
-                self.replay_memory = pickle.load(open('models/Rep_Mem.pkl', 'rb'))
-                self.replay_memory.maxlen = Config.REPLAY_MEMORY_SIZE
+                self.replay_memory = deque(pickle.load(open('models/Rep_Mem.pkl', 'rb')), maxlen=Config.REPLAY_MEMORY_SIZE)
             except Exception as e:
                 print("Error al cargar modelo: ", e)
 
