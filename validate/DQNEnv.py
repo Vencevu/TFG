@@ -11,6 +11,7 @@ import random
 import numpy as np
 import tensorflow as tf
 from collections import deque
+import pickle
 from keras.models import Model, load_model
 from keras.callbacks import TensorBoard
 from keras.applications.xception import Xception
@@ -65,6 +66,7 @@ class DQNAgent:
             try:
                 self.model.save_weights('models/Weights_RL_Model.h5')
                 self.model.save('models/RL_Model.h5')
+                pickle.dump(self.replay_memory, open('models/Rep_Mem.pkl', 'wb'))
             except Exception as e:
                 print("Error al guardar modelo: ",e)
 
@@ -74,6 +76,8 @@ class DQNAgent:
                 self.model = load_model("models/RL_Model.h5")
                 self.model.load_weights("models/Weights_RL_Model.h5")
                 self.target_model.set_weights(self.model.get_weights())
+                self.replay_memory = pickle.load(open('Rep_Mem.pkl', 'rb'))
+                self.replay_memory.maxlen = Config.REPLAY_MEMORY_SIZE
             except Exception as e:
                 print("Error al cargar modelo: ", e)
 
