@@ -159,11 +159,11 @@ class CarlaEnv:
         
         # Penalizacion por aproximacion a obstaculo (LIDAR)
         if self.obj_prox > 0:
-            self.reward = Config.INT_REWARD * self.obj_prox
+            self.reward += Config.INT_REWARD * self.obj_prox
 
         # Reinicio por colision
         if self.collision != None:
-            self.reward = Config.MIN_REWARD * 3
+            self.reward += Config.MIN_REWARD * 3
             reset_type = 2
             self.done = True
             print("Collision-Reset...")
