@@ -1,39 +1,26 @@
-from spade import agent, quit_spade
-from spade.behaviour import CyclicBehaviour
+import carla
 import time
 
-class CarAgent(agent.Agent):
+from matplotlib.colors import colorConverter
 
-    #Comportamiento del agente
-    class MyBehav(CyclicBehaviour):
-        current_state = None
-    
-        async def on_start(self):
-            print("Comportamiento iniciado")
+client = carla.Client('127.0.0.1', 2000)
+client.set_timeout(2.0)
 
-        async def run(self):
-            print("Ejecucion")
+world = client.get_world()
+map = world.get_map()
+blueprint_library = world.get_blueprint_library()
+actor_list = []
 
-        async def on_end(self):
-            print("Behaviour finished with exit code {}.".format(self.exit_code))
-    
-    async def setup(self):
-        self.my_behav = self.MyBehav()
-        self.add_behaviour(self.my_behav)
+bp = blueprint_library.filter('vehicle')[0]
+transform = carla.Transform(carla.Location(-30, 26, 0.6))
+vehicle = world.try_spawn_actor(bp, transform) 
+actor_list.append(vehicle)
 
-
-#Lanzamos el agente
-dummy = CarAgent("agente@localhost", "1234")
-future = dummy.start()
-future.result()
-
-while dummy.is_alive():
+while True:
     try:
-        time.sleep(1)
+        time.sleep(2)
     except KeyboardInterrupt:
-        dummy.stop()
         break
 
-print("Agent %s finished" % dummy.name)
-
-quit_spade()
+client.apply_batch([carla.command.DestroyActor(x) for x in actor_list])
+print("End")
