@@ -79,6 +79,7 @@ def lidar_callback(point_cloud, point_list):
     # what we see in Unreal since Open3D uses a right-handed coordinate system
     points[:, :1] = -points[:, :1]
     points = points[points[:, 2] > -1, :]
+    points = points[np.sqrt(points[:, 0]**2 + points[:, 1]**2) > 1.9, :]
     # # An example of converting points from sensor to vehicle space if we had
     # # a carla.Transform variable named "tran":
     # points = np.append(points, np.ones((points.shape[0], 1)), axis=1)
