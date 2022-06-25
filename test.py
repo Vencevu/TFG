@@ -14,11 +14,10 @@ y_axis_goal = []
 
 for row in data:
     d = row
-    print(d)
     
     num = float(d[1].replace(',', '.'))
     num = float(num)
-    
+
     if d[2] == 'Tiempo':
         y_axis_time.append(num)
         x_axis_time.append(int(d[0]))
