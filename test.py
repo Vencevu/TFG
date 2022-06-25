@@ -1,26 +1,38 @@
-import carla
-import time
+import csv
+import matplotlib.pyplot as plt
 
-from matplotlib.colors import colorConverter
+dist_csv = open('csv/validate/Distances.csv', 'r')
+data = csv.reader(dist_csv)
 
-client = carla.Client('127.0.0.1', 2000)
-client.set_timeout(2.0)
+x_axis_time = []
+x_axis_goal = []
+x_axis_col = []
+y_axis_time = []
+y_axis_col = []
+y_axis_goal = []
 
-world = client.get_world()
-map = world.get_map()
-blueprint_library = world.get_blueprint_library()
-actor_list = []
+for row in data:
+    d = row[0].split(';')
+    if d[2] == 'Tiempo':
+        y_axis_time.append(d[1])
+        x_axis_time.append(d[0])
+    elif d[2] == 'Colision':
+        y_axis_col.append(d[1])
+        x_axis_col.append(d[0])
+    elif d[2] == 'Objetivo':
+        y_axis_goal.append(d[1])
+        x_axis_goal.append(d[0])
 
-bp = blueprint_library.filter('vehicle')[0]
-transform = carla.Transform(carla.Location(-30, 26, 0.6))
-vehicle = world.try_spawn_actor(bp, transform) 
-actor_list.append(vehicle)
+print(len(x_axis_time))
+print(len(x_axis_col))
+print(len(x_axis_goal))
 
-while True:
-    try:
-        time.sleep(2)
-    except KeyboardInterrupt:
-        break
+plt.scatter(x_axis_time, y_axis_time, label="time reset")
+plt.scatter(x_axis_col, y_axis_col, label="collision reset")
+plt.scatter(x_axis_goal, y_axis_goal, label="goal")
+plt.legend(loc="upper left")
+plt.xlabel("Episodios")
+plt.ylabel("Distancia al objetivo")
+plt.savefig('Distancias.png')
 
-client.apply_batch([carla.command.DestroyActor(x) for x in actor_list])
-print("End")
+dist_csv.close()

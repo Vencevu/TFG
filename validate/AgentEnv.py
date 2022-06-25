@@ -75,7 +75,7 @@ class CarAgent(agent.Agent):
                             # This takes no time, so we add a delay matching 60 FPS (prediction above takes longer)
                             time.sleep(1 / Config.FPS)
 
-                        distance = round(self.env.distance_to_goal(self.goal_x, self.goal_y), 3)
+                        distance = round(self.env.distance_to_goal(self.goal_x, self.goal_y), 2)
                         new_state, car_velocity, reward, self.done, reset_type = self.env.step(action, distance)
                         episode_reward += reward
                         self.agent_dqn.update_replay_memory((self.current_state, action, reward, new_state, self.done))
