@@ -1,8 +1,9 @@
 import csv
+from decimal import Decimal
 import matplotlib.pyplot as plt
 
 dist_csv = open('csv/validate/Distances.csv', 'r')
-data = csv.reader(dist_csv)
+data = csv.reader(dist_csv,delimiter=';')
 
 x_axis_time = []
 x_axis_goal = []
@@ -12,20 +13,23 @@ y_axis_col = []
 y_axis_goal = []
 
 for row in data:
-    d = row[0].split(';')
+    d = row
+    print(d)
+    
+    num = float(d[1].replace(',', '.'))
+    num = float(num)
+    
     if d[2] == 'Tiempo':
-        y_axis_time.append(d[1])
-        x_axis_time.append(d[0])
+        y_axis_time.append(num)
+        x_axis_time.append(int(d[0]))
     elif d[2] == 'Colision':
-        y_axis_col.append(d[1])
-        x_axis_col.append(d[0])
+        y_axis_col.append(num)
+        x_axis_col.append(int(d[0]))
     elif d[2] == 'Objetivo':
-        y_axis_goal.append(d[1])
-        x_axis_goal.append(d[0])
+        y_axis_goal.append(num)
+        x_axis_goal.append(int(d[0]))
+    
 
-print(len(x_axis_time))
-print(len(x_axis_col))
-print(len(x_axis_goal))
 
 plt.scatter(x_axis_time, y_axis_time, label="time reset")
 plt.scatter(x_axis_col, y_axis_col, label="collision reset")
