@@ -1,4 +1,3 @@
-from cmath import inf
 import carla
 import math
 import time

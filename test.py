@@ -1,28 +1,24 @@
-import csv
-from decimal import Decimal
-import matplotlib.pyplot as plt
+import carla
+import time
 
-dist_csv = open('csv/validate/Loss1.csv', 'r')
-data = csv.reader(dist_csv,delimiter=';')
+actor_list = []
+client = carla.Client('127.0.0.1', 2000)
+client.set_timeout(2.0)
 
-x=[]
-y=[]
+world = client.get_world()
+map = world.get_map()
 
-for row in data:
-    d = row
-    num = d[1]
+blueprint_library = world.get_blueprint_library()
+bp = blueprint_library.filter('vehicle')[0]
+transform = carla.Transform(carla.Location(-30, 25, 0.6))
+vehicle = world.spawn_actor(bp, transform) 
+actor_list.append(vehicle)
 
-    num = num.replace('.', '', num.count('.') - 1)
-    num = float(num)
-    y.append(num)
-    x.append(int(d[0]))
-    
+while True:
+    try:
+        time.sleep(1)
+    except KeyboardInterrupt:
+        break
 
-
-plt.plot(x, y)
-plt.yscale('log')
-plt.xlabel("Episodios")
-plt.ylabel("Pérdida")
-plt.savefig('Loss.png')
-
-dist_csv.close()
+client.apply_batch([carla.command.DestroyActor(x) for x in actor_list])
+print("End...")
