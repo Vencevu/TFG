@@ -81,17 +81,15 @@ class DQNAgent:
                 print("Error al cargar modelo: ", e)
 
     def create_model(self):
-        ## input: RGB data, should be normalized when coming into CNN
-
         base_model = Xception(weights=None, include_top=False, input_shape=(Config.IM_HEIGHT, Config.IM_WIDTH, 3))
         x = base_model.output
         x = GlobalAveragePooling2D()(x)
         x = Flatten()(x)
 
-        predictions = Dense(Config.N_ACTIONS, activation="linear")(x)  ## output layer include 4 nuros, representing 4 actions
+        predictions = Dense(Config.N_ACTIONS, activation="linear")(x)  ## capa de salida con n neuronas (n acciones)
         model = Model(inputs=base_model.input, outputs=predictions)
-        # model.compile(loss="mse", optimizer=Adam(lr=0.001), metrics=["accuracy"])
         model.compile(loss="mse", optimizer='adam', metrics=["accuracy"])
+        
         return model
 
     ## function handler
